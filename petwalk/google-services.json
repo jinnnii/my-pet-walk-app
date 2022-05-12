@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "637787655059",
+    "firebase_url": "https://my-pet-walk-default-rtdb.firebaseio.com",
+    "project_id": "my-pet-walk",
+    "storage_bucket": "my-pet-walk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:637787655059:android:8ea5760b718cd5c7a53666",
+        "android_client_info": {
+          "package_name": "com.example.mypetwalk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "637787655059-o7r36n0piq7rdp9o4crept1sedi9f7pn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-mOlyVtS8EJeuZD23FeiPU50qBohHeG0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "637787655059-o7r36n0piq7rdp9o4crept1sedi9f7pn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:637787655059:android:21923590b538b6d4a53666",
+        "android_client_info": {
+          "package_name": "com.project.petwalk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "637787655059-o7r36n0piq7rdp9o4crept1sedi9f7pn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-mOlyVtS8EJeuZD23FeiPU50qBohHeG0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "637787655059-o7r36n0piq7rdp9o4crept1sedi9f7pn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
