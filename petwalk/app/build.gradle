@@ -1,6 +1,10 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    //추가//
+    id 'kotlin-parcelize'
+    id 'kotlin-android'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -32,6 +36,11 @@ android {
     viewBinding{
         enabled=true
     }
+    buildFeatures{
+        //noinspection DataBindingWithoutKapt
+        dataBinding true
+
+    }
 }
 
 apply plugin: 'com.android.application'
@@ -51,23 +60,57 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:30.0.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-core:21.0.0'
+
     implementation 'com.google.firebase:firebase-database:20.0.5'
-    implementation 'com.google.firebase:firebase-auth-ktx:21.0.3'
-    implementation 'com.google.firebase:firebase-storage-ktx:20.0.1'
     implementation 'com.google.firebase:firebase-database-ktx:20.0.5'
+
+    implementation 'com.google.firebase:firebase-firestore:24.1.2'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.1.2'
+
+    implementation 'com.google.firebase:firebase-auth:21.0.3'
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-auth-ktx:21.0.3'
+
+    implementation 'com.google.firebase:firebase-storage:20.0.1'
+    implementation 'com.google.firebase:firebase-storage-ktx:20.0.1'
+
+    //todo error!
+//    implementation "com.google.firebase:firebase-ml-vision:"
+//    implementation "com.google.firebase:firebase-ml-vision-face-model:20.0.2"
+
+
 
     //Bottom Nav bar
     implementation 'com.google.android.material:material:1.6.0'
 
-    //Simple Image
+    //glide : 이미지 라이브러리(메모리관리)
     implementation 'com.github.bumptech.glide:glide:4.12.0'
 
     //이미지 로딩 라이브러리
-//    api 'com.squareup.picasso:2.71828'
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     //시간 관련 라이브러리
     implementation 'net.danlew:android.joda:2.10.2'
 
+    //data binding
+    implementation 'androidx.databinding:databinding-runtime:7.2.0'
+
+    // 카메라
+    def c_version = "1.0.1"
+    //noinspection GradleDependency
+    implementation "androidx.camera:camera-camera2:$c_version"
+    //noinspection GradleDependency
+    implementation "androidx.camera:camera-lifecycle:$c_version"
+    implementation "androidx.camera:camera-view:1.1.0-rc01"
+
+    // 구글 플레이 서비스 인증 의존성
+    implementation 'com.google.android.gms:play-services-auth:20.2.0'
+
+    //구글 맵
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
+
+    //retrofit : 데이터 관리
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
 }
