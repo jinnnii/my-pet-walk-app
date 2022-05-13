@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">petwalk</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="google_map_api">AIzaSyBEyoRfJkb5V2pSC-dMn9zn3yWcYO8EFO4</string>
 </resources>

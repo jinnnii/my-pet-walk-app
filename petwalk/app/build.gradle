@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    id 'kotlin-android-extensions'
 }
 
 android {
@@ -69,5 +71,10 @@ dependencies {
     //시간 관련 라이브러리
     implementation 'net.danlew:android.joda:2.10.2'
 
+    //구글 맵
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
 
+    //retrofit : api 가져오기
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 }
