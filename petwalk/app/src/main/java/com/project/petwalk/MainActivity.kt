@@ -1,7 +1,15 @@
 package com.project.petwalk
 
+import android.Manifest
+import android.app.Activity
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.project.petwalk.databinding.ActivityMainBinding
 import com.project.petwalk.frag.*
@@ -18,11 +26,12 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         binding.bottomNav.run {
             setOnItemSelectedListener { item->
                 when(item.itemId){
