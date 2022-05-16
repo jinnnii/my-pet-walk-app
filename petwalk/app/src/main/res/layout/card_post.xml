@@ -113,9 +113,9 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:adjustViewBounds="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline1"
+            app:layout_constraintBottom_toBottomOf="@+id/clockImage"
+            app:layout_constraintEnd_toStartOf="@+id/commentCountText"
+            app:layout_constraintTop_toTopOf="@+id/clockImage"
             app:srcCompat="@drawable/comment" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
