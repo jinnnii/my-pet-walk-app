@@ -17,6 +17,16 @@ class FragHome : Fragment() {
     ): View? {
         binding= FragmentFragHomeBinding.inflate(inflater, container, false)
         return binding.root
+
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.animationView.setOnClickListener {
+            //binding.animationView.
+        }
+
     }
 
 }
