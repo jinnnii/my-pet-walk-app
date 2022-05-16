@@ -1,23 +1,35 @@
 package com.project.petwalk.frag
 
-import android.app.ActionBar
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.maps.SupportMapFragment
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
 import com.project.petwalk.Post
 import com.project.petwalk.R
-import com.project.petwalk.WriteActivity
+import com.project.petwalk.community.CommunityWriteActivity
 import com.project.petwalk.databinding.FragmentFragCommunityBinding
-import kotlinx.android.synthetic.main.activity_main.*
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.card_background.view.*
+import kotlinx.android.synthetic.main.card_background.view.imageView
+import kotlinx.android.synthetic.main.card_post.view.*
 import kotlinx.android.synthetic.main.fragment_frag_community.*
-import kotlinx.coroutines.flow.callbackFlow
+import org.joda.time.DateTime
+import org.joda.time.Days
+import org.joda.time.Hours
+import org.joda.time.Minutes
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class FragCommunity : Fragment() {
@@ -38,11 +50,14 @@ class FragCommunity : Fragment() {
         // Inflate the layout for this fragment
         binding= FragmentFragCommunityBinding.inflate(inflater, container, false)
         return binding.root
+    }
 
-        //       플로팅버튼으로 WriteActivity로 이동-----------------------------------------
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
 
         // actionbar 의 타이틀을 "글목록" 으로 변경
-        //supportActionBar?.title = "글목록"
+        (activity as AppCompatActivity).supportActionBar?.title ="글목록"
 
         // 하단의 floatingActionButton 이 클릭될때의 리스너를 설정한다.
 //        binding.floatingActionButton.setOnClickListener {
@@ -64,12 +79,12 @@ class FragCommunity : Fragment() {
         layoutManager.stackFromEnd = true
 
         recyclerView.layoutManager = layoutManager
-//       recyclerView.adapter = WriteActivity.MyAdapter()
+       recyclerView.adapter = MyAdapter()
 
 //       ----------------------------------------------------------------------
 
 
-//       글 목록을 가져오는 부분 -----------------------------------------------
+        // 글 목록을 가져오는 부분 -----------------------------------------------
 
         // Firebase 에서 Post 데이터를 가져온 후 posts 변수에 저장
         FirebaseDatabase.getInstance().getReference("/Posts")
@@ -109,8 +124,25 @@ class FragCommunity : Fragment() {
                         }
                     }
                 }
-                // 글의 순서가 이동한 경우
+
+                //글이 삭제된 경우
                 override fun onChildRemoved(snapshot: DataSnapshot) {
+                    snapshot?.let {
+                        // snapshot 의 데이터를 Post 객체로 가져옴
+                        val post = snapshot.getValue(Post::class.java)
+
+                        //
+                        post?.let { post ->
+                            // 기존에 저장된 인덱스를 찾아서 해당 인덱스의 데이터를 삭제한다.
+                            val existIndex = posts.map {it.postId}.indexOf(post.postId)
+                            posts.removeAt(existIndex)
+                            recyclerView.adapter?.notifyItemRemoved(existIndex)
+                        }
+                    }
+
+                }
+                // 글의 순서가 이동한 경우
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
                     //snapshot
                     snapshot?.let {
                         // snapshot 의 데이터를 Post 객체로 가져옴
@@ -122,23 +154,27 @@ class FragCommunity : Fragment() {
                             // 기존 데이터를 지운다
                             posts.removeAt(existIndex)
                             recyclerView.adapter?.notifyItemRemoved(existIndex)
+                            //previousChildName 가 없는 경우 맨 마지막으로 이동 된 것
+                            if(previousChildName== null){
+                                posts.add(post)
+                                recyclerView.adapter?.notifyItemChanged(posts.size - 1)
+                            } else {
+                                //previousChildName 다음 글로 추가
+                                val prevIndex = posts.map {it.postId}.indexOf(previousChildName)
+                                posts.add(prevIndex + 1, post)
+                                recyclerView.adapter?.notifyItemChanged(prevIndex + 1)
+                            }
                         }
                     }
                 }
 
-                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                    TODO("Not yet implemented")
-                }
-
+                // 취소된 경우
                 override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
+                    // 취소가 된 경우 에러를 로그로 보여준다
+                    error?.toException()?.printStackTrace()
                 }
-
             })
-
-
-
-//       --------------------------------------------------------------
+        //       --------------------------------------------------------------
 
         // 값의 변경이 있는 경우의 이벤트 리스너를 추가한다.
         ref.addValueEventListener(object: ValueEventListener {
@@ -158,18 +194,78 @@ class FragCommunity : Fragment() {
             }
         })
 
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+//       플로팅버튼으로 WriteActivity로 이동-----------------------------------------
         binding.floatingActionButton.setOnClickListener {
             //Intent 생성
-            val intent = Intent(this.context, WriteActivity::class.java)
+            val intent = Intent(this.context, CommunityWriteActivity::class.java)
             //val intent = Intent()
             //Intent 로 WriteActivity 실행
             startActivity(intent)
 
+        }
+    }
+
+    // RecyclerView 에서 사용하는 View 홀더 클래스
+    inner class  MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        // 글의 배경 이미지뷰
+        val imageView : ImageView = itemView.imageView
+        // 글의 내용 텍스트뷰
+        val contentsText : TextView = itemView.contentsText
+        // 글쓴 시간 텍스트뷰
+        val timeTextView : TextView = itemView.timeTextView
+        // 댓글 개수 텍스트뷰
+        val commentCountText : TextView = itemView.commentCountText
+    }
+
+    // RecyclerView 의 어댑터 클래스
+    inner class MyAdapter : RecyclerView.Adapter<MyViewHolder>(){
+        // RecyclerView 에서 각 Row(행)에서 그릴 ViewHolder 를 생성할때 불리는 메소드
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+            return MyViewHolder(LayoutInflater.from(context).inflate(R.layout.card_post,parent,false))
+        }
+
+        // 각 행의 포지션에서 그려야할 ViewHoler UI 에 데이터를 적용하는 메소드
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            val post = posts[position]
+            // 배경 이미지 설정
+            Picasso.get().load(Uri.parse(post.bgUri)).fit().centerCrop().into(holder.imageView)
+            // 카드에 글을 세팅
+            holder.contentsText.text = post.message
+            // 글이 쓰여진 시간
+//            holder.timeTextView.text = getDiffTimeText(post.writeTime as Long)
+            val text:String = getDiffTimeText(post.writeTime as Long)
+            holder.timeTextView.text = text
+//            holder.timeTextView.setText().toString() = getDiffTimeText(post.writeTime as Long)
+//            holder.timeTextView.text = getString(getDiffTimeText(post.writeTime as Long))
+            // 댓글 개수는 현재 상태에서는 0으로 일단 세팅
+            holder.commentCountText.text = "0"
+        }
+
+        // RecyclerView 에서 몇개의 행을 그릴지 기준이 되는 메소드
+        override fun getItemCount(): Int {
+            return posts.size
+        }
+
+    }
+
+    // 글이 쓰여진 시간을 "방금전", "시간전", "yyyy년 MM월 dd일 HH:mm" 포맷으로 변환해주는 메소드
+    fun getDiffTimeText(targetTime: Long): String{
+        val curDateTime = DateTime()
+        val targetDateTime = DateTime().withMillis(targetTime)
+
+        val diffDay = Days.daysBetween(curDateTime, targetDateTime).days
+        val diffHours = Hours.hoursBetween(targetDateTime, curDateTime).hours
+        val diffMinutes = Minutes.minutesBetween(targetDateTime, curDateTime).minutes
+        if(diffDay == 0) {
+            if(diffHours == 0 && diffMinutes == 0){
+                return "방금 전"
+            }
+            return if(diffHours > 0){
+                ""+ diffHours + "시간 전"
+            } else "" + diffMinutes + "분 전"
+        } else {
+            val format = SimpleDateFormat("yyyy년 MM월 dd일 HH:mm")
+            return format.format(Date(targetTime)).toString()
         }
     }
 

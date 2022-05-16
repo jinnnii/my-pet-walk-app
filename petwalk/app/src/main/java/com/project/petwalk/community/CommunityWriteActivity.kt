@@ -1,4 +1,4 @@
-package com.project.petwalk
+package com.project.petwalk.community
 
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -13,16 +13,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
-import com.google.firebase.database.ServerValue.TIMESTAMP
+import com.project.petwalk.Post
+import com.project.petwalk.R
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_write.*
+import kotlinx.android.synthetic.main.activity_community_write.*
 import kotlinx.android.synthetic.main.card_background.view.*
-import kotlinx.android.synthetic.main.fragment_frag_community_write.*
-import java.sql.Types.TIMESTAMP
 import java.text.SimpleDateFormat
 import java.util.*
 
-class WriteActivity : AppCompatActivity() {
+class CommunityWriteActivity : AppCompatActivity() {
     //    배경 리스트 데이터
 //    res/drawable 디렉토리에 있는 배경 이미지를 uri 주소로 사용한다.
 //    uri 주소로 사용하면 추후 웹에 있는 이미지 URL 도 바로 사용이 가능하다.
@@ -38,18 +37,20 @@ class WriteActivity : AppCompatActivity() {
         "android.resource://com.project.petwalk/drawable/bg9"
     )
 
+
+
     //    현재 선택된 배경이미지의 포지션을 저장하는 변수
     var currentBgPosition = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_write)
+        setContentView(R.layout.activity_community_write)
 
         // actionbar 의 타이틀을 "글쓰기"로 변경
         supportActionBar?.title = "글쓰기"
 
         // recyclerView 에서 사용할 레이아웃 매니저를 생성한다.
-        val layoutManager = LinearLayoutManager(this@WriteActivity)
+        val layoutManager = LinearLayoutManager(this@CommunityWriteActivity)
         // recyclerView 를 횡으로 스크롤 할것이므로 layManager 의 방향을 HORIZONTAL로 설정한다.
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
 
@@ -70,11 +71,11 @@ class WriteActivity : AppCompatActivity() {
             // Firebase 의 Posts 참조에서 객체를 저장하기 위한 새로운 키를 생성하고 참조를 newRef 에 저장
             val newRef = FirebaseDatabase.getInstance().getReference("Posts").push()
             // 글이 쓰여진 시간은 Firebase 서버의 시간으로 설정
-            val time = System.currentTimeMillis()
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm")
-            val curTime = dateFormat.format(Date(time)).toString()
+//            val time = System.currentTimeMillis()
+//            val dateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm")
+//            val curTime = dateFormat.format(Date(time)).toString()
 
-            post.writeTime = curTime
+            post.writeTime = ServerValue.TIMESTAMP
             //post.writeTime = SimpleDateFormat("yyyy-MM-dd hh:mm")
             // 배경 Uri 주소를 현재 선택된 배경의 주소로 할당
             post.bgUri = bgList[currentBgPosition]
@@ -108,7 +109,7 @@ class WriteActivity : AppCompatActivity() {
         // RecyclerView 에서 각 Row(행)dptj rmflf ViewHoler 를 생성할때 불리는 메소드
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             //RecyclerView 에서 사용하는 ViewHolder 클래스를 card_background 레이아웃 리소스 파일을 사용하도록 생성한다.
-            return MyViewHolder(LayoutInflater.from(this@WriteActivity).inflate(R.layout.card_background,parent,false))
+            return MyViewHolder(LayoutInflater.from(this@CommunityWriteActivity).inflate(R.layout.card_background,parent,false))
         }
 
         // 각 행의 포지션에서 그려야할 ViewHolder UI 에 데이터를 적용하는 메소드
