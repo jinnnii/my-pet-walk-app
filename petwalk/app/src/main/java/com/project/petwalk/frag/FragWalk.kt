@@ -1,18 +1,16 @@
 package com.project.petwalk.frag
 
-import android.Manifest
-import android.app.Activity
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
+import android.graphics.ColorSpace
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.opengl.Visibility
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
@@ -21,11 +19,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -54,22 +50,20 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
 
     lateinit var binding: FragmentFragWalkBinding
 
+    lateinit var mapFragment:SupportMapFragment
+
+    lateinit var pathPoly:PolylineOptions
+
     //지도
     private lateinit var mMap: GoogleMap
 
     //동반 시설 분류 코드
     val PART_CODE = arrayOf("PC01", "PC02", "PC03", "PC04", "PC05")
+    val MARKER = arrayOf(R.drawable.ic_mark_cafe, R.drawable.ic_mark_bed, R.drawable.ic_mark_tour, R.drawable.ic_mark_exp, R.drawable.ic_mark_hospital)
 
     //현재위치
     lateinit var manager: LocationManager
 
-    //파이어베이스
-    val database: FirebaseDatabase = FirebaseDatabase.getInstance()
-    val reference: DatabaseReference =database.getReference("locations")
-    val walkReference:DatabaseReference = database.getReference("walk")
-
-    //시작 시, 데이터베이스에 저장할 key 값
-    lateinit var key:String
 
     // 위치 정보를 저장할 리스트
     lateinit var locations:ArrayList<LocationModel>
@@ -84,6 +78,7 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
     /**
      * 처음 지도 화면 (현재 위치로 카메라 이동)
      */
+    @SuppressLint("MissingPermission")
     private val callback = OnMapReadyCallback { googleMap ->
         mMap = googleMap
         if(locations.size!=0){
@@ -92,7 +87,8 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
                 .target(LatLng(userLocation.latitude, userLocation.longitude))
                 .zoom(19F)
                 .build()
-            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+            mMap.isMyLocationEnabled=true
         }
 //        else {
 //            val cameraPosition= CameraPosition.Builder()
@@ -106,7 +102,8 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
     /**
      * 동반가능 시설 위치 마커 찍기
      */
-    private fun drawMark(travelList:List<Travel>, code:String){
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun drawMark(travelList:List<Travel>, code:String, mk:Int){
         for(travel in travelList){
             val lat= travel.latitude.toDouble()
             val lng= travel.longitude.toDouble()
@@ -115,9 +112,8 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
 
 
             val position = LatLng(lat, lng)
-
             val markerOptions = MarkerOptions()
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+            markerOptions.icon(bitmapDescriptorFromVector(context, mk))
             val marker: Marker? = mMap.addMarker(markerOptions.position(position).title(title))
 
             marker?.tag= "$id,$code"
@@ -126,16 +122,35 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
     }
 
     /**
+     * 마커 아이콘 Bitmap으로 변경
+     */
+    private fun bitmapDescriptorFromVector(context: Context?, vectorResId: Int): BitmapDescriptor? {
+        return context?.let {
+            ContextCompat.getDrawable(it, vectorResId)?.run {
+                setBounds(0, 0, intrinsicWidth, intrinsicHeight)
+                val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
+                draw(Canvas(bitmap))
+                BitmapDescriptorFactory.fromBitmap(bitmap)
+            }
+        }
+    }
+
+
+
+    /**
+     *
      * 경로 그리기
      */
     private fun drawPath(){
         if(locations.size>1){
             val size= locations.size-1
-            val start = LatLng(locations[size-1].latitude, locations[size-1].longitude)
-            val end = LatLng(locations[size].latitude, locations[size].longitude)
-            val options:PolylineOptions  = PolylineOptions().add(start).add(end).width(60F).color(R.color.path_green).geodesic(true);
-            mMap.addPolyline(options)
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(end, 19F))
+//            val start = LatLng(locations[size-1].latitude, locations[size-1].longitude)
+//            val end = LatLng(locations[size].latitude, locations[size].longitude)
+//            val path:PolylineOptions  = PolylineOptions().add(start).width(60F).color(R.color.path_green).geodesic(true)
+            val lastLoc = LatLng(locations[size].latitude, locations[size].longitude)
+            pathPoly.add(lastLoc)
+            mMap.addPolyline(pathPoly)
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLoc, 19F))
         }
     }
 
@@ -183,13 +198,18 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
 
     }
 
-    /**
-     * 파이어베이스에 위치정보 저장
-     */
-    private fun sendLocation(idx:Int, key:String, lat:Double, lon:Double, time:Long){
-        val location= LocationModel( lat, lon, time)
-        reference.child(key).child(idx.toString()).setValue(location)
+    @SuppressLint("MissingPermission")
+    private fun initMap(){
+        manager= activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        location?.let {
+            locations.add(LocationModel(location.latitude, location.longitude, location.time))
+            mapFragment.getMapAsync(callback)
+
+            pathPoly = PolylineOptions().add(LatLng(location.latitude, location.longitude)).width(50F).color(Color.parseColor("#99B3B1")).geodesic(true)
+        }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -202,10 +222,10 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         locations = ArrayList()
-        manager= activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        val mapFragment = childFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment?
+
+        mapFragment = (childFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment?)!!
 
         /**
          *  위치 권한 승락/거부 시 동작
@@ -227,11 +247,7 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
          * 위치 권한 확인
          */
         if(this.context?.let { ContextCompat.checkSelfPermission(it, "android.permission.ACCESS_FINE_LOCATION") } == PackageManager.PERMISSION_GRANTED){
-            val location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            location?.let {
-                locations.add(LocationModel(location.latitude, location.longitude, location.time))
-                mapFragment?.getMapAsync(callback)
-            }
+           initMap()
         }else{
             permissionLauncher.launch("android.permission.ACCESS_FINE_LOCATION")
         }
@@ -253,8 +269,6 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
             startDate = System.currentTimeMillis()
 
 
-            //저장할 키 생성
-            key= reference.push().key!!
 
             // todo  최소 10초, 최소 10m 마다 위치 확인
             manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000L, 0f, listener)
@@ -263,31 +277,31 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
              * 반려동물 동반 장소 api 사용
              */
             val travelNetService = (activity?.applicationContext as PetTravelAPI).networkService
-            val travelListCall = travelNetService.doGetTravelList("1","133","PC01")
+            for(idx in PART_CODE.indices) {
+                val travelListCall = travelNetService.doGetTravelList("1", "133", PART_CODE[idx])
 
-            travelListCall.enqueue(object: Callback<List<TravelList>> {
-                override fun onResponse(
-                    call: Call<List<TravelList>>,
-                    response: Response<List<TravelList>>
-                ) {
-                    if(response.isSuccessful){
-                        Log.d("pet", response.body()?.get(0)?.resultList.toString())
-                        val travelList:List<Travel> = response.body()?.get(0)?.resultList!!
-                        for(code in PART_CODE){
-                            drawMark(travelList,code)
+                travelListCall.enqueue(object : Callback<List<TravelList>> {
+                    override fun onResponse(
+                        call: Call<List<TravelList>>,
+                        response: Response<List<TravelList>>
+                    ) {
+                        if (response.isSuccessful) {
+                            Log.d("pet", response.body()?.get(0)?.resultList.toString())
+                            val travelList: List<Travel> = response.body()?.get(0)?.resultList!!
+                            drawMark(travelList, PART_CODE[idx], MARKER[idx])
+
+                        } else {
+                            Log.d("pet", "failed")
                         }
-
-                    }else{
-                        Log.d("pet", "failed")
                     }
-                }
 
-                override fun onFailure(call: Call<List<TravelList>>, t: Throwable) {
-                    call.cancel()
-                }
+                    override fun onFailure(call: Call<List<TravelList>>, t: Throwable) {
+                        call.cancel()
+                    }
 
 
-            })
+                })
+            }
         }
 
         /**
@@ -319,23 +333,10 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
         binding.endBtn.setOnClickListener{
             endDate=System.currentTimeMillis()
 
-            //파이어베이스에 위치 정보 저장하기
-            val locKey = reference.push().key!!
-            for( i in 0 until locations.size){
-                sendLocation(
-                    i,
-                    locKey,
-                    locations[i].latitude,
-                    locations[i].longitude,
-                    locations[i].time)
-            }
 
-            //walk 객체 저장
-            val walkKey = walkReference.push().key!!
-            val location = mapOf(locKey to true)
             val timeSec = binding.chronometer.drawingTime-binding.chronometer.base
 
-            val walk = Walk(walkKey,initDistance, startDate, endDate, timeSec, location)
+            val walk = Walk("",initDistance, startDate, endDate, timeSec, mapOf(),"")
 
 
             pauseTime=0L
@@ -352,13 +353,20 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
 
             manager.removeUpdates(listener)
 
-
+            // todo walk 객체 전송
             val intent = Intent(context, WalkResultActivity::class.java)
             intent.putExtra("walk", walk)
-            startActivity(intent)
+            intent.putExtra("locations", locations)
+            startActivityForResult(intent,3000)
 
         }
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.d("pet",">>>>>>>>>>>>>>>>>>>>>>>>>"+resultCode.toString())
+        initMap()
     }
 
     /**

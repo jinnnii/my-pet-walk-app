@@ -3,18 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/kej/petwalk/petwalk/app/src/main/res/drawable/circle_icon.xml" value="0.2715" />
-        <entry key="..\:/kej/petwalk/petwalk/app/src/main/res/drawable/ic_hashtag_solid.xml" value="0.1375" />
-        <entry key="..\:/kej/petwalk/petwalk/app/src/main/res/drawable/radius_bottom_box.xml" value="0.2715" />
-        <entry key="..\:/kej/petwalk/petwalk/app/src/main/res/drawable/radius_box.xml" value="0.2715" />
-        <entry key="..\:/kej/petwalk/petwalk/app/src/main/res/layout-v28/activity_walk_result.xml" value="0.17806484295845998" />
-        <entry key="..\:/kej/petwalk/petwalk/app/src/main/res/layout/activity_main.xml" value="0.1875" />
-        <entry key="..\:/kej/petwalk/petwalk/app/src/main/res/layout/activity_maps.xml" value="0.1875" />
-        <entry key="..\:/kej/petwalk/petwalk/app/src/main/res/layout/activity_walk_result.xml" value="0.25" />
-        <entry key="..\:/kej/petwalk/petwalk/app/src/main/res/layout/activity_walk_travel_detail.xml" value="0.33" />
-        <entry key="..\:/kej/petwalk/petwalk/app/src/main/res/layout/fragment_frag_mypage.xml" value="0.1875" />
-        <entry key="..\:/kej/petwalk/petwalk/app/src/main/res/layout/fragment_frag_walk.xml" value="0.33" />
-        <entry key="..\:/kej/petwalk/petwalk/app/src/main/res/layout/fragment_maps.xml" value="0.14722222222222223" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/drawable/circle_icon.xml" value="0.148" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/activity_test.xml" value="0.36614583333333334" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/activity_walk_detail.xml" value="0.22447916666666667" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/activity_walk_result.xml" value="0.11392405063291139" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/fragment_blank.xml" value="0.36614583333333334" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/fragment_frag_walk.xml" value="0.264" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/fragment_maps.xml" value="0.36614583333333334" />
         <entry key="..\:/kej/pj/android/petwalk/app/src/main/res/drawable-v24/ic_baseline_calendar_today_24.xml" value="0.116" />
         <entry key="..\:/kej/pj/android/petwalk/app/src/main/res/layout/activity_image.xml" value="0.17291666666666666" />
         <entry key="..\:/kej/pj/android/petwalk/app/src/main/res/layout/activity_main.xml" value="0.1" />

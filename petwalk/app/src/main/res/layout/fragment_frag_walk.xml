@@ -74,7 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="산책시간"
-                    android:textColor="@color/main_green"
+                    android:textColor="@color/second_green"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -101,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="거리 km"
-                android:textColor="@color/main_green"
+                android:textColor="@color/second_green"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -115,13 +115,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center">
 
-            <Button
+            <ImageButton
                 android:id="@+id/parse_btn"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_margin="40dp"
-                android:background="@drawable/circle_icon"
-                android:text="일시정지" />
+                android:background="@color/white"
+                android:src="@drawable/ic_parse_btn"/>
         </LinearLayout>
 
         <LinearLayout
@@ -131,24 +131,23 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center">
 
-            <Button
+            <ImageButton
                 android:id="@+id/restart_btn"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center"
                 android:layout_margin="40dp"
-                android:background="@drawable/circle_icon"
-                android:text="다시시작" />
+                android:background="@color/white"
+                android:src="@drawable/ic_play_btn" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/end_btn"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center"
                 android:layout_margin="40dp"
-                android:background="@drawable/circle_icon"
-                android:backgroundTint="@color/main_green"
-                android:text="중지" />
+                android:background="@color/white"
+                android:src="@drawable/ic_stop_btn"/>
 
         </LinearLayout>
 

@@ -9,5 +9,6 @@ data class Walk (
     var startTime:Long,
     var endTime:Long,
     var usedTime:Long,
-    var locations:Map<String,Boolean>
+    var locations:Map<String,Boolean>,
+    var memo:String
 ): Serializable
