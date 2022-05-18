@@ -55,6 +55,15 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
+        <Button
+            android:id="@+id/commentSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="전송"
+            tools:layout_editor_absoluteX="307dp"
+            tools:layout_editor_absoluteY="56dp" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

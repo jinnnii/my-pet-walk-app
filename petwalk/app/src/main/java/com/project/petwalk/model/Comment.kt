@@ -11,7 +11,6 @@ class Comment {
     var message = ""
 //    작성시간
     var writeTime:Any = Any()
-//    배경 이미지
-    var bgUri = ""
+
 }
 

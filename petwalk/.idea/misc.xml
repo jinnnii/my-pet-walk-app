@@ -3,12 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/IT/project/petwalk/petwalk/app/src/main/res/layout/activity_comment.xml" value="0.36614583333333334" />
         <entry key="..\:/IT/project/petwalk/petwalk/app/src/main/res/layout/activity_main.xml" value="0.36614583333333334" />
         <entry key="..\:/IT/project/petwalk/petwalk/app/src/main/res/layout/activity_write.xml" value="0.29583333333333334" />
         <entry key="..\:/IT/project/petwalk/petwalk/app/src/main/res/layout/card_background.xml" value="0.29583333333333334" />
+        <entry key="..\:/IT/project/petwalk/petwalk/app/src/main/res/layout/card_comment.xml" value="0.36614583333333334" />
         <entry key="..\:/IT/project/petwalk/petwalk/app/src/main/res/layout/fragment_frag_community.xml" value="0.35052083333333334" />
         <entry key="..\:/IT/project/petwalk/petwalk/app/src/main/res/layout/fragment_frag_community_write.xml" value="0.36614583333333334" />
         <entry key="..\:/IT/project/petwalk/petwalk/app/src/main/res/layout/fragment_frag_home.xml" value="0.36614583333333334" />
+        <entry key="..\:/IT/project/petwalk/petwalk/app/src/main/res/layout/item_comment.xml" value="0.36614583333333334" />
         <entry key="..\:/andproject/petwalk/petwalk/app/src/main/res/layout/activity_comment.xml" value="0.33" />
         <entry key="..\:/andproject/petwalk/petwalk/app/src/main/res/layout/activity_community_write.xml" value="0.18333333333333332" />
         <entry key="..\:/andproject/petwalk/petwalk/app/src/main/res/layout/card_comment.xml" value="0.35052083333333334" />
