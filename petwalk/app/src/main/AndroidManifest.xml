@@ -23,11 +23,19 @@
         android:theme="@style/Theme.Petwalk"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".community.CommunityWriteActivity"
-            android:exported="true">
+            android:name=".community.CommentActivity"
+            android:exported="true"
+            android:label="@string/title_activity_comment"
+            android:theme="@style/Theme.Petwalk.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-
+        <activity
+            android:name=".community.CommunityWriteActivity"
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

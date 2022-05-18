@@ -1,7 +1,11 @@
 package com.project.petwalk.frag
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Context.LOCATION_SERVICE
+import android.content.pm.PackageManager
+import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
@@ -9,6 +13,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.camera.core.impl.utils.ContextUtil.getApplicationContext
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.project.petwalk.databinding.FragmentFragHomeBinding
 import com.project.petwalk.home.retrofit.ITEM
@@ -19,15 +25,22 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
-import java.util.*
 
 
-class FragHome : Fragment() {
+class FragHome : Fragment(){
+
+    private var locationManager: LocationManager? = null
+    private val REQUEST_CODE_LOCATION = 2
+
+//    private var mFusedLocationProviderClient: FusedLocationProviderClient? = null // 현재 위치를 가져오기 위한 변수
+//    lateinit var mLastLocation: Location // 위치 값을 가지고 있는 객체
+//    internal lateinit var mLocationRequest: LocationRequest // 위치 정보 요청의 매개변수를 저장하는
+//    private val REQUEST_PERMISSION_LOCATION = 10
 
     lateinit var binding: FragmentFragHomeBinding
     lateinit var weather: Weather
-//    var mLocationManager: LocationManager? = null
-//    var mLocationListener: LocationListener? = null
+//    var locationManager: LocationManager? = null
+//    var locationListener: LocationListener? = null
 //    override fun onActivityCreated(savedInstanceState: Bundle?) {
 //        super.onActivityCreated(savedInstanceState)
 //
@@ -57,19 +70,67 @@ class FragHome : Fragment() {
             binding.animationView.playAnimation()
         }
 
-//
-        weather.rainType = "3" // 날씨 조작
+// 현재 날씨별 아이콘변경부분 ---------------------------------------------------------------------------------------------------------------
+//        weather.rainType = "3" // 날씨 조작
         if(weather!!.rainType=="2" || weather!!.rainType=="1"){ //비
             binding.weatherAnimationView.setAnimationFromUrl("https://assets8.lottiefiles.com/private_files/lf30_orqfuyox.json")
         } else if(weather!!.rainType=="3"){ //눈
             binding.weatherAnimationView.setAnimationFromUrl("https://assets6.lottiefiles.com/temp/lf20_WtPCZs.json")
         }else if(weather!!.sky == "3" || weather!!.sky == "4"){ //구름
             binding.weatherAnimationView.setAnimationFromUrl("https://assets5.lottiefiles.com/packages/lf20_wfx6naii.json")
-        } else //해
+        } else {}//해
 
-        getWeather()
+//        ----------------------------------------------------------------------------------------------------------
+
+        // 실시간 위치 nx,ny 받기-----------------------------------------------------------------------------------------------------------
+
+
+        //사용자의 현재 위치
+        getMyLocation()
+
+}
+    /**
+     * 사용자의 위치를 수신
+     */
+    private fun getMyLocation() {
+        if (context?.let {
+                ActivityCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            } !== PackageManager.PERMISSION_GRANTED && context?.let {
+                ActivityCompat.checkSelfPermission(
+                    it, Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            } !== PackageManager.PERMISSION_GRANTED
+        ) {
+            //println("////////////사용자에게 권한을 요청해야함")
+            activity?.let {
+                ActivityCompat.requestPermissions(
+                    it, arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_CODE_LOCATION
+                )
+            }
+            getMyLocation() //권한 승인하면 즉시 위치값 받아오려고 사용. 필수X
+        } else {
+            //사용자의 위치 수신을 위한 세팅
+            locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            locationManager!!.requestLocationUpdates(LocationManager.GPS_PROVIDER,0L,0F,listener)
+        }
+    }
+
+    private val listener: LocationListener = object:LocationListener{
+        override fun onLocationChanged(location: Location) {
+            nx=location.latitude.toInt().toString()
+            ny=location.longitude.toInt().toString()
+            getWeather()
+            locationManager?.removeUpdates(this)
+        }
 
     }
+    //---------------------------------------------------------------------------------------------------------
+
+    // 날씨 api에서 날씨데이터 받와서 필요한데이터만 추출하기------------------------------------------------------------
     @SuppressLint("SimpleDateFormat")
     private fun getWeather(){
         val networkService=(activity?.applicationContext as WeatherAPI).networkService
@@ -83,24 +144,35 @@ class FragHome : Fragment() {
         Log.d("pet",timeStr)
 
 
-        val userListCall=networkService.getWeather(60,1,"JSON",currentTime, timeStr, "55","127"   )
+        val userListCall=networkService.getWeather(60,1,"JSON",currentTime, timeStr, nx,ny   )
         userListCall.enqueue(object : Callback<WEATHER> {
             override fun onResponse(call: Call<WEATHER>, response: Response<WEATHER>) {
                 if(response.isSuccessful){
                     val it: List<ITEM> = response.body()!!.response.body.items.item
-                    weather=Weather()
+
+                    val weatherArr = arrayOf(Weather(), Weather(), Weather(), Weather(), Weather(), Weather())
+
                     var index = 0
-                    when(it[0].category) {
-                        "PTY" -> weather!!.rainType = it[0].fcstValue     // 강수 형태
-                        "SKY" -> weather!!.sky = it[0].fcstValue          // 하늘 상태
-                        "T1H" -> weather!!.temp = it[0].fcstValue         // 기온
-                    }
+                    val totalCount = response.body()!!.response.body.totalCount - 1
+                    for (i in 0..totalCount) {
+                        index %= 6
+                        when(it[i].category) {
+                            "PTY" -> weatherArr[index].rainType = it[i].fcstValue     // 강수 형태
+                            "SKY" -> weatherArr[index].sky = it[i].fcstValue          // 하늘 상태
+                            "T1H" -> weatherArr[index].temp = it[i].fcstValue         // 기온
+                            else -> continue
+                        }
                         index++
+                    }
+                    //날짜 배열 시간 설정
+                    for (i in 0..5) weatherArr[i].fcstTime = it[i].fcstTime
+
+                    for(i in 0..5){
+                        Log.d("ayr",":::::"+weatherArr[i].toString())
+                    }
 
                     // 각 날짜 배열 시간 설정
-                    weather!!.fcstTime = it[0].fcstTime
-
-                    Log.d("pet",">>>>>>>>>>>>>>>>>>"+ weather!!.rainType)
+                    Log.d("ayr",">>>>>>>>>>>>>>>>>>"+weatherArr[0].toString())
 
                 }
 
@@ -113,6 +185,11 @@ class FragHome : Fragment() {
 
         })
     }
+    //---------------------------------------------------------------------------------
+
+
 }
+
+
 
 
