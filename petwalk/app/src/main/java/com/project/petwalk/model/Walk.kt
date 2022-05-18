@@ -4,11 +4,11 @@ import java.io.Serializable
 
 
 data class Walk (
-    var id:String,
-    var distance:Double,
-    var startTime:Long,
-    var endTime:Long,
-    var usedTime:Long,
-    var locations:Map<String,Boolean>,
-    var memo:String
+    var id:String="",
+    var distance:Double=0.0,
+    var startTime:Long=0L,
+    var endTime:Long=0L,
+    var usedTime:Long=0L,
+    var locations:Map<String,Boolean> = mapOf(),
+    var memo:String=""
 ): Serializable

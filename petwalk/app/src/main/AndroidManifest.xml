@@ -20,6 +20,9 @@
         android:theme="@style/Theme.Petwalk"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".calendar.CalendarDetail"
+            android:exported="false" />
+        <activity
             android:name=".walk.WalkResultActivity"
             android:exported="false" />
         <activity
