@@ -62,7 +62,7 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
     val MARKER = arrayOf(R.drawable.ic_mark_cafe, R.drawable.ic_mark_bed, R.drawable.ic_mark_tour, R.drawable.ic_mark_exp, R.drawable.ic_mark_hospital)
 
     //현재위치
-    lateinit var manager: LocationManager
+    var manager: LocationManager?= null
 
 
     // 위치 정보를 저장할 리스트
@@ -181,7 +181,7 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
             mapFragment.getMapAsync(callback)
             pathPoly = PolylineOptions().add(LatLng(location.latitude, location.longitude)).width(50F).color(Color.parseColor("#99B3B1")).geodesic(true)
 
-            manager.removeUpdates(this)
+            manager?.removeUpdates(this)
         }
 
     }
@@ -211,7 +211,7 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
     private fun initMap(){
         manager= activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 //        val location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, initListener)
+        manager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, initListener)
     }
 
 
@@ -230,6 +230,7 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
 
         mapFragment = (childFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment?)!!
+
 
         /**
          *  위치 권한 승락/거부 시 동작
@@ -252,6 +253,7 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
          */
         if(this.context?.let { ContextCompat.checkSelfPermission(it, "android.permission.ACCESS_FINE_LOCATION") } == PackageManager.PERMISSION_GRANTED){
             initMap()
+            init()
         }else{
             permissionLauncher.launch("android.permission.ACCESS_FINE_LOCATION")
         }
@@ -275,14 +277,16 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
 
 
             // todo  최소 10초, 최소 10m 마다 위치 확인
-            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000L, 0f, listener)
+            manager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000L, 0f, listener)
 
             /**
              * 반려동물 동반 장소 api 사용
              */
-            val travelNetService = (activity?.applicationContext as PetTravelAPI).networkService
+//            val travelNetService = (activity?.applicationContext as PetTravelAPI).networkService
+
             for(idx in PART_CODE.indices) {
-                val travelListCall = travelNetService.doGetTravelList("1", "133", PART_CODE[idx])
+//                val travelListCall = travelNetService.doGetTravelList("1", "133", PART_CODE[idx])
+                val travelListCall = PetTravelAPI.networkService.doGetTravelList("1", "133", PART_CODE[idx])
 
                 travelListCall.enqueue(object : Callback<List<TravelList>> {
                     override fun onResponse(
@@ -343,19 +347,7 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
             val walk = Walk("",initDistance, startDate, endDate, timeSec, mapOf(),"")
 
 
-            pauseTime=0L
-            initDistance=0.0
-
-            binding.chronometer.base=SystemClock.elapsedRealtime()
-            binding.chronometer.stop()
-
-            binding.beforeFrame.visibility=View.VISIBLE
-            binding.ingFrame.visibility=View.GONE
-            binding.parseBtn.visibility=View.VISIBLE
-            binding.parseLayout.visibility=View.GONE
-            binding.distance.text="0.0"
-
-            manager.removeUpdates(listener)
+            init()
 
             // todo walk 객체 전송
             val intent = Intent(context, WalkResultActivity::class.java)
@@ -364,6 +356,23 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
             startActivityForResult(intent,3000)
 
         }
+
+    }
+
+    fun init(){
+        pauseTime=0L
+        initDistance=0.0
+
+        binding.chronometer.base=SystemClock.elapsedRealtime()
+        binding.chronometer.stop()
+
+        binding.beforeFrame.visibility=View.VISIBLE
+        binding.ingFrame.visibility=View.GONE
+        binding.parseBtn.visibility=View.VISIBLE
+        binding.parseLayout.visibility=View.GONE
+        binding.distance.text="0.0"
+
+        manager?.removeUpdates(listener)
 
     }
 
@@ -387,8 +396,8 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
 
 
         // 동반 시설 디테일 정보 가져오기
-        val travelNetService = (activity?.applicationContext as PetTravelAPI).networkService
-        val travelDetailCall = travelNetService.doGetTravelDetail(code,number)
+//        val travelNetService = (activity?.applicationContext as Tr.networkService
+        val travelDetailCall = PetTravelAPI.networkService.doGetTravelDetail(code,number)
 
         travelDetailCall.enqueue(object: Callback<List<TravelDetailList>> {
             override fun onResponse(

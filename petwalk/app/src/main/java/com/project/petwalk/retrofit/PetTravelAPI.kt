@@ -4,11 +4,9 @@ import android.app.Application
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class PetTravelAPI:Application() {
+object PetTravelAPI{
     var networkService: INetworkService
-    val retrofit:Retrofit
-
-        get()= Retrofit.Builder()
+    val retrofit:Retrofit= Retrofit.Builder()
             .baseUrl("http://www.pettravel.kr/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()

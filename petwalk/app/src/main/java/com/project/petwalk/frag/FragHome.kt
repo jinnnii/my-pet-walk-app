@@ -32,19 +32,9 @@ class FragHome : Fragment(){
     private var locationManager: LocationManager? = null
     private val REQUEST_CODE_LOCATION = 2
 
-//    private var mFusedLocationProviderClient: FusedLocationProviderClient? = null // 현재 위치를 가져오기 위한 변수
-//    lateinit var mLastLocation: Location // 위치 값을 가지고 있는 객체
-//    internal lateinit var mLocationRequest: LocationRequest // 위치 정보 요청의 매개변수를 저장하는
-//    private val REQUEST_PERMISSION_LOCATION = 10
-
     lateinit var binding: FragmentFragHomeBinding
     lateinit var weather: Weather
-//    var locationManager: LocationManager? = null
-//    var locationListener: LocationListener? = null
-//    override fun onActivityCreated(savedInstanceState: Bundle?) {
-//        super.onActivityCreated(savedInstanceState)
-//
-//    }
+
     private var base_date = "20220510"  // 발표 일자
     private var base_time = "1400"      // 발표 시각
     private var nx = "55"               // 예보지점 X 좌표
@@ -88,7 +78,7 @@ class FragHome : Fragment(){
         //사용자의 현재 위치
         getMyLocation()
 
-}
+    }
     /**
      * 사용자의 위치를 수신
      */
@@ -133,7 +123,6 @@ class FragHome : Fragment(){
     // 날씨 api에서 날씨데이터 받와서 필요한데이터만 추출하기------------------------------------------------------------
     @SuppressLint("SimpleDateFormat")
     private fun getWeather(){
-        val networkService=(activity?.applicationContext as WeatherAPI).networkService
 
         val sdf = SimpleDateFormat("yyyyMMdd")
         val hdf = SimpleDateFormat("HH")
@@ -141,10 +130,8 @@ class FragHome : Fragment(){
         val currentTime = sdf.format(System.currentTimeMillis())
         val curHour = hdf.format(System.currentTimeMillis())
         val timeStr = curHour+"00"
-        Log.d("pet",timeStr)
 
-
-        val userListCall=networkService.getWeather(60,1,"JSON",currentTime, timeStr, nx,ny   )
+        val userListCall=WeatherAPI.networkService.getWeather(60,1,"JSON",currentTime, timeStr, nx,ny   )
         userListCall.enqueue(object : Callback<WEATHER> {
             override fun onResponse(call: Call<WEATHER>, response: Response<WEATHER>) {
                 if(response.isSuccessful){
@@ -168,11 +155,11 @@ class FragHome : Fragment(){
                     for (i in 0..5) weatherArr[i].fcstTime = it[i].fcstTime
 
                     for(i in 0..5){
-                        Log.d("ayr",":::::"+weatherArr[i].toString())
+                        Log.d("pet",":::::"+weatherArr[i].toString())
                     }
-
+                    weather = weatherArr[0]
                     // 각 날짜 배열 시간 설정
-                    Log.d("ayr",">>>>>>>>>>>>>>>>>>"+weatherArr[0].toString())
+                    Log.d("pet",">>>>>>>>>>>>>>>>>>"+weatherArr[0].toString())
 
                 }
 
@@ -189,7 +176,3 @@ class FragHome : Fragment(){
 
 
 }
-
-
-
-
