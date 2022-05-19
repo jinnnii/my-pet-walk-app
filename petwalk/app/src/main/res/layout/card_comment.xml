@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/commentProfileImg"
+        android:id="@+id/commentProfile"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginStart="20dp"
@@ -17,7 +17,7 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/commentNickName"
+        android:id="@+id/commentNick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -25,17 +25,17 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:text="닉네임"
-        app:layout_constraintStart_toEndOf="@+id/commentProfileImg"
+        app:layout_constraintStart_toEndOf="@+id/commentProfile"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/commentContent"
+        android:id="@+id/CommentTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="33dp"
         android:text="댓글내용"
         android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/commentProfileImg"
-        app:layout_constraintTop_toBottomOf="@+id/commentNickName" />
+        app:layout_constraintStart_toEndOf="@+id/commentProfile"
+        app:layout_constraintTop_toBottomOf="@+id/commentNick" />
 </androidx.constraintlayout.widget.ConstraintLayout>

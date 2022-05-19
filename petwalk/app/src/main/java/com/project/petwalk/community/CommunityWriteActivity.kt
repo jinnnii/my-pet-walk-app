@@ -112,7 +112,7 @@ class CommunityWriteActivity : AppCompatActivity() {
                 // Firebase 의 Posts 참조에서 객체를 저장하기 위한 새로운 키를 생성하고 참조를 newRef 에 저장
                 val newRef = FirebaseDatabase.getInstance().getReference("Comments/$postId").push()
                 comment.writeTime = ServerValue.TIMESTAMP
-                comment.bgUri = bgList[currentBgPosition]
+//                comment.bgUri = bgList[currentBgPosition]
                 // 메세지는 input EditText 의 텍스트 내용을 할당
                 comment.message = input.text.toString()
                 // 글쓴 사람의 ID는 디바이스의 아이디로 할당

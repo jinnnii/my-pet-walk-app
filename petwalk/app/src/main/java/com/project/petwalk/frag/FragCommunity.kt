@@ -17,11 +17,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
 import com.project.petwalk.Post
 import com.project.petwalk.R
+import com.project.petwalk.community.CommentActivity
 import com.project.petwalk.community.CommunityWriteActivity
 import com.project.petwalk.databinding.FragmentFragCommunityBinding
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.card_background.view.*
 import kotlinx.android.synthetic.main.card_background.view.imageView
+import kotlinx.android.synthetic.main.card_post.*
 import kotlinx.android.synthetic.main.card_post.view.*
 import kotlinx.android.synthetic.main.fragment_frag_community.*
 import org.joda.time.DateTime
@@ -237,8 +239,18 @@ class FragCommunity : Fragment() {
             holder.timeTextView.text = text
 //            holder.timeTextView.setText().toString() = getDiffTimeText(post.writeTime as Long)
 //            holder.timeTextView.text = getString(getDiffTimeText(post.writeTime as Long))
-            // 댓글 개수는 현재 상태에서는 0으로 일단 세팅
-            holder.commentCountText.text = "0"
+
+            //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+            // 피드형 게시판 각 카드에 댓글 개수 표기
+            holder.commentCountText.text = "댓글()"
+            //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+            holder.commentCountText.setOnClickListener {
+                val intent = Intent(context, CommentActivity::class.java)
+                intent.putExtra("postId", post.postId)
+                startActivity(intent)
+            }
+
         }
 
         // RecyclerView 에서 몇개의 행을 그릴지 기준이 되는 메소드
