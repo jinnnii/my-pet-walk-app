@@ -92,13 +92,7 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
             mMap.isMyLocationEnabled=true
         }
-//        else {
-//            val cameraPosition= CameraPosition.Builder()
-//                .target(LatLng(37.747381503046,127.630154310527))
-//                .zoom(19F)
-//                .build()
-//            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-//        }
+
     }
 
     /**

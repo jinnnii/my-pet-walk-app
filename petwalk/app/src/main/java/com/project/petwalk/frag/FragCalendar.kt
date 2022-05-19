@@ -32,7 +32,7 @@ class FragCalendar : Fragment(){
     lateinit var selectDate:LocalDate
 
     //저장 및 표시할 walk 데이터
-//    var walkList = arrayListOf<Walk>()
+    var walkDataList = arrayListOf<Walk>()
 
 
     //파이어베이스
@@ -74,6 +74,7 @@ class FragCalendar : Fragment(){
         monthYearText=binding.tvMonthYear
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @RequiresApi(Build.VERSION_CODES.O)
     fun setMonthView(walkList:ArrayList<Walk>){
         monthYearText.text= monthYeartFromDate(selectDate)
@@ -116,13 +117,13 @@ class FragCalendar : Fragment(){
     @RequiresApi(Build.VERSION_CODES.O)
     fun previousMonthAction(view:View){
         selectDate=selectDate.minusMonths(1)
-        setMonthView()
+        getThisMonthData(walkDataList)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun nextMonthAction(view:View){
         selectDate= selectDate.plusMonths(1)
-        setMonthView()
+        getThisMonthData(walkDataList)
     }
 //    @RequiresApi(Build.VERSION_CODES.O)
 //    override fun onItemClick(position: Int, dayText: String) {
@@ -132,12 +133,27 @@ class FragCalendar : Fragment(){
 //        }
 //    }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("SimpleDateFormat")
+    fun getThisMonthData(walkList: ArrayList<Walk>){
+        val satisWalkList = arrayListOf<Walk>()
+        for (walk in walkList) {
+            val fmt = SimpleDateFormat("MMMM yyyy")
+            val walkDay = fmt.format(walk.endTime)
+
+            if (walkDay == monthYeartFromDate(selectDate)) {
+                Log.d("pet","이번달 기록된 날짜 ::::: $walk")
+                satisWalkList.add(walk)
+            }
+        }
+
+        setMonthView(satisWalkList)
+    }
 
     /**
      * 파이어베이스 정보 가져오기
      */
-
-    fun getWalkData():ArrayList<Walk> {
+    fun getWalkData() {
         //todo 테스트 유저 사용하기
         val testUserUid = "NQkNJArulWd4vAMN8wO9JOb9VUw2"
         userReference.child(testUserUid).child("walk")
@@ -146,24 +162,17 @@ class FragCalendar : Fragment(){
                 @SuppressLint("SimpleDateFormat", "NotifyDataSetChanged")
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val walkArr = dataSnapshot.value as Map<*, *>
-                    val walkList = ArrayList<Walk>()
 
 
                     for (walkData in walkArr) {
                         val key = walkData.key.toString()
                         walkReference.child(key).get().addOnSuccessListener {
                             val walk = it.getValue(Walk::class.java)
-                            val fmt = SimpleDateFormat("MMMM yyyy")
-                            val walkDay = fmt.format(walk?.endTime)
-
-                            if (walkDay == monthYeartFromDate(selectDate)) {
-                                Log.d("pet","이번달 기록된 날짜 ::::: $walk")
-                                walkList.add(walk!!)
-                            }
+                            walkDataList.add(walk!!)
                         }
                     }
 
-                    recyclerView.adapter?.notifyDataSetChanged() //리스트 저장 및 새로고침
+                    getThisMonthData(walkDataList)
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {}
