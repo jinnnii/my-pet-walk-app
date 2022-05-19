@@ -1,14 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".frag.FragWalk">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="walks" />
+        tools:ignore="FragmentTagUsage" />
 
-</FrameLayout>
+    <FrameLayout
+        android:id="@+id/before_frame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+    <Button
+        android:id="@+id/start_btn"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_gravity="center"
+        android:text="출발하기"
+        />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/ing_frame"
+        android:visibility="gone"
+        android:elevation="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="-1dp"
+        android:background="@drawable/radius_bottom_box">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:paddingTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_weight="1"
+                tools:ignore="MissingConstraints">
+
+<!--                <TextView-->
+<!--                    android:id="@+id/time"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="00:27"-->
+<!--                    android:textColor="@color/main_green"-->
+<!--                    android:textSize="32dp"-->
+<!--                    android:textStyle="bold" />-->
+
+                <Chronometer
+                    android:id="@+id/chronometer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/main_green"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="산책시간"
+                    android:textColor="@color/second_green"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/light_gray"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.15"
+                android:textColor="@color/main_green"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/title_"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="거리 km"
+                android:textColor="@color/second_green"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ing_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center">
+
+            <ImageButton
+                android:id="@+id/parse_btn"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_margin="40dp"
+                android:background="@color/white"
+                android:src="@drawable/ic_parse_btn"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/parse_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center">
+
+            <ImageButton
+                android:id="@+id/restart_btn"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:layout_margin="40dp"
+                android:background="@color/white"
+                android:src="@drawable/ic_play_btn" />
+
+            <ImageButton
+                android:id="@+id/end_btn"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:layout_margin="40dp"
+                android:background="@color/white"
+                android:src="@drawable/ic_stop_btn"/>
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+</RelativeLayout>
