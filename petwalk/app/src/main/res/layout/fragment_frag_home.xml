@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".frag.FragHome">
 
     <!-- TODO: Update blank fragment layout -->
@@ -10,5 +11,30 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="home" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="right"
+            android:id="@+id/weatherAnimationView"
+            app:lottie_url="https://assets9.lottiefiles.com/packages/lf20_i7ixqfgx.json"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/animationView"
+            app:lottie_url="https://assets5.lottiefiles.com/packages/lf20_lc6foY.json"
+            app:lottie_autoPlay="false"
+            app:lottie_loop="false" />
+    </LinearLayout>
 
 </FrameLayout>
