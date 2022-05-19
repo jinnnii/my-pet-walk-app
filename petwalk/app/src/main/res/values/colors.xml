@@ -10,6 +10,7 @@
     <color name="main_green">#286433</color>
     <color name="second_green">#7EAA86</color>
     <color name="light_gray">#C3C3C3</color>
+    <color name="d_light_gray">#ECECEC</color>
     <color name="path_green">#99B3B1</color>
     <color name="dark_gray">#404040</color>
 </resources>

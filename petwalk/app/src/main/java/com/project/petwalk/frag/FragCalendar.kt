@@ -32,13 +32,12 @@ class FragCalendar : Fragment(){
     lateinit var selectDate:LocalDate
 
     //저장 및 표시할 walk 데이터
-    var walkList = arrayListOf<Walk>()
+//    var walkList = arrayListOf<Walk>()
 
 
     //파이어베이스
     val database: FirebaseDatabase = FirebaseDatabase.getInstance()
     val userReference:DatabaseReference=database.getReference("Users")
-    val locReference: DatabaseReference =database.getReference("locations")
     val walkReference: DatabaseReference = database.getReference("walk")
 
 
@@ -55,42 +54,10 @@ class FragCalendar : Fragment(){
         super.onViewCreated(view, savedInstanceState)
 
         //todo init
-
         initWidgets()
         selectDate = LocalDate.now()
 
-        /**
-         * WALk 데이터 가져오기
-         */
-        val testUserUid = "NQkNJArulWd4vAMN8wO9JOb9VUw2"
-        walkList.clear()
-        userReference.child(testUserUid).child("walk")
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                @RequiresApi(Build.VERSION_CODES.O)
-                @SuppressLint("SimpleDateFormat", "NotifyDataSetChanged")
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val walkArr = dataSnapshot.value as Map<*, *>
-                    for (walkData in walkArr) {
-                        val key = walkData.key.toString()
-                        walkReference.child(key).get().addOnSuccessListener {
-                            val walk = it.getValue(Walk::class.java)
-                            val fmt = SimpleDateFormat("MMMM yyyy")
-                            val walkDay = fmt.format(walk?.endTime)
-
-                            if (walkDay == monthYeartFromDate(selectDate)) {
-                                Log.d("pet", walkList.toString())
-                                walkList.add(walk!!)
-                            }
-                        }
-                    }
-                    recyclerView.adapter?.notifyDataSetChanged() //리스트 저장 및 새로고침
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {}
-
-            })
-
-        setMonthView()
+        getWalkData()
 
 
 
@@ -100,23 +67,21 @@ class FragCalendar : Fragment(){
         binding.nextMonth.setOnClickListener{
             nextMonthAction(binding.root)
         }
+
     }
-
-
     fun initWidgets(){
         recyclerView=binding.calendarRecycler
         monthYearText=binding.tvMonthYear
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun setMonthView(){
-        Log.d("pet", "setmonthView :::: "+walkList.toString())
-
+    fun setMonthView(walkList:ArrayList<Walk>){
         monthYearText.text= monthYeartFromDate(selectDate)
         val dayInMonth:ArrayList<String> = daysInMonthArray(selectDate)
 
         val calAdapter=CalAdapter(context as Activity, dayInMonth, walkList)
         val layoutManager:RecyclerView.LayoutManager = GridLayoutManager(activity?.applicationContext, 7)
+
         recyclerView.layoutManager=layoutManager
         recyclerView.adapter=calAdapter
 
@@ -172,18 +137,18 @@ class FragCalendar : Fragment(){
      * 파이어베이스 정보 가져오기
      */
 
-    fun getWalkData() {
+    fun getWalkData():ArrayList<Walk> {
         //todo 테스트 유저 사용하기
         val testUserUid = "NQkNJArulWd4vAMN8wO9JOb9VUw2"
-
-        walkList = arrayListOf()
-
         userReference.child(testUserUid).child("walk")
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 @RequiresApi(Build.VERSION_CODES.O)
                 @SuppressLint("SimpleDateFormat", "NotifyDataSetChanged")
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val walkArr = dataSnapshot.value as Map<*, *>
+                    val walkList = ArrayList<Walk>()
+
+
                     for (walkData in walkArr) {
                         val key = walkData.key.toString()
                         walkReference.child(key).get().addOnSuccessListener {
@@ -192,17 +157,18 @@ class FragCalendar : Fragment(){
                             val walkDay = fmt.format(walk?.endTime)
 
                             if (walkDay == monthYeartFromDate(selectDate)) {
-                                Log.d("pet", walkList.toString())
+                                Log.d("pet","이번달 기록된 날짜 ::::: $walk")
                                 walkList.add(walk!!)
                             }
                         }
                     }
+
                     recyclerView.adapter?.notifyDataSetChanged() //리스트 저장 및 새로고침
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {}
 
-                })
+            })
     }
 }
 

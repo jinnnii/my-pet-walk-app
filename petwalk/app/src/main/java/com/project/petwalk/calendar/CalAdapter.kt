@@ -2,6 +2,7 @@ package com.project.petwalk.calendar
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.opengl.Visibility
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +12,8 @@ import android.widget.AdapterView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.NonNull
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -21,32 +24,32 @@ import java.text.SimpleDateFormat
 
 class CalViewHolder(val binding:ItemCalendarBinding):RecyclerView.ViewHolder(binding.root)
 
-class CalAdapter(val context: Context, val days:List<String>?, val walkList:List<Walk>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+
+class CalAdapter(val context: Context, val days:List<String>?, val walkList:List<Walk>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
+    View.OnClickListener {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder
     = CalViewHolder(ItemCalendarBinding.inflate(LayoutInflater.from(parent.context),parent,false))
 
     @SuppressLint("SimpleDateFormat")
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int ) {
         val binding = (holder as CalViewHolder).binding
         val day=days?.get(position)
-        Log.d("pet", "day :::::: "+day)
-        val fmt = SimpleDateFormat("dd")
-        for(walk in walkList){
-            val endDay = fmt.format(walk.endTime)
-            Log.d("pet", "end day :::::: "+endDay)
-            if(endDay==day){
-                binding.calMark.visibility= View.VISIBLE
-            }
-        }
 
+        val walk = checkWalk(day!!)
+
+        if(walk!=null){
+            binding.calMark.visibility= View.VISIBLE
+            binding.calDayTxt.tag=walk
+            binding.calDayTxt.setOnClickListener(this)
+        }
 
         binding.calDayTxt.text=day
 
-        binding.calDayTxt.setOnClickListener{
-//            itemClickListener.onClick(it,position)
-            Toast.makeText(this.context, "click ${day} ${position} ",Toast.LENGTH_SHORT).show()
-        }
+//        binding.calDayTxt.setOnClickListener{
+////            itemClickListener.onClick(it,position)
+//            Toast.makeText(this.context, "click ${day} ${position} ",Toast.LENGTH_SHORT).show()
+//        }
 
     }
 
@@ -54,47 +57,23 @@ class CalAdapter(val context: Context, val days:List<String>?, val walkList:List
         return days?.size ?:0
     }
 
+    @SuppressLint("SimpleDateFormat")
+    fun checkWalk(day:String): Walk? {
+        val fmt = SimpleDateFormat("dd")
+        for(walk in walkList){
+            if(fmt.format(walk.endTime)==day){
+                Log.d("pet", walk.toString())
+                return walk
+            }
+        }
+        return null
+    }
+
+    override fun onClick(v: View?) {
+        val walk:Walk = v?.tag as Walk
+        val intent = Intent(context, CalendarDetail::class.java)
+        intent.putExtra("walk",walk)
+        context.startActivity(intent)
+    }
+
 }
-
-
-
-
-
-//class CalViewHolder(@NonNull itemView: View, val onItemListener: CalAdapter.OnItemListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-//    val dayOfMonth: TextView
-//    init {
-//        this.dayOfMonth = itemView.findViewById(R.id.cal_day_txt)
-//        itemView.setOnClickListener(this)
-//    }
-//
-//    override fun onClick(v: View?) {
-//        onItemListener.onItemClick(adapterPosition, dayOfMonth.text.toString())
-//    }
-//
-//}
-
-//class CalAdapter(var daysOfMonth: ArrayList<String>, var onItemListener: OnItemListener) : RecyclerView.Adapter<CalViewHolder>(){
-//
-//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalViewHolder {
-//        val inflater = LayoutInflater.from(parent.context)
-//        val view:View = inflater.inflate(R.layout.item_calendar, parent, false)
-//        val layoutParams:ViewGroup.LayoutParams = view.layoutParams
-//        layoutParams.height=parent.height* (0.166666666).toInt()
-//        return CalViewHolder(view, onItemListener)
-//
-//    }
-//
-//    override fun onBindViewHolder(holder:CalViewHolder, position: Int) {
-//        Log.d("pet", daysOfMonth[position].toString())
-//        holder.dayOfMonth.text= daysOfMonth[position]
-//    }
-//
-//    override fun getItemCount(): Int {
-//        return daysOfMonth.size
-//    }
-//
-//    interface OnItemListener{
-//        fun onItemClick(position:Int, dayText:String)
-//    }
-//
-//}

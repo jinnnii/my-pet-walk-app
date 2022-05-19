@@ -81,6 +81,8 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
     @SuppressLint("MissingPermission")
     private val callback = OnMapReadyCallback { googleMap ->
         mMap = googleMap
+        Log.d("pet", mMap.toString())
+
         if(locations.size!=0){
             val userLocation = locations[0]
             val cameraPosition = CameraPosition.Builder()
@@ -175,14 +177,27 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
     /**
      * 실시간 위치 좌표 리스트에 넣기
      */
+
+    private val initListener :LocationListener=object :LocationListener{
+        override fun onLocationChanged(location: Location) {
+            locations.add(LocationModel(location.latitude, location.longitude, location.time))
+            val location = locations[0]
+            
+            Log.d("pet", "실시간 좌표 위치 첫번째>>>$locations")
+            mapFragment.getMapAsync(callback)
+            pathPoly = PolylineOptions().add(LatLng(location.latitude, location.longitude)).width(50F).color(Color.parseColor("#99B3B1")).geodesic(true)
+
+            manager.removeUpdates(this)
+        }
+
+    }
     private val listener: LocationListener = object:LocationListener
     {
         override fun onLocationChanged(location: Location) {
             locations.add(LocationModel(location.latitude, location.longitude, location.time))
-            
             // 경로 업데이트
             drawPath()
-            
+
             // 이동거리 업데이트
             val size= locations.size-1
             addDistance(
@@ -190,8 +205,8 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
                 locations[size].latitude,
                 locations[size-1].longitude,
                 locations[size].longitude)
-            
-            
+
+
             Log.d("pet","${location.latitude},${location.longitude}, ${location.time}")
             Log.d("pet", locations.toString())
         }
@@ -201,13 +216,8 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
     @SuppressLint("MissingPermission")
     private fun initMap(){
         manager= activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        location?.let {
-            locations.add(LocationModel(location.latitude, location.longitude, location.time))
-            mapFragment.getMapAsync(callback)
-
-            pathPoly = PolylineOptions().add(LatLng(location.latitude, location.longitude)).width(50F).color(Color.parseColor("#99B3B1")).geodesic(true)
-        }
+//        val location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, initListener)
     }
 
 
@@ -239,7 +249,7 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
                 Toast.makeText(this.context,
                     "권한 설정이 거부되었습니다.\n앱을 사용하시려면 다시 실행해주세요.",
                     Toast.LENGTH_SHORT).show()
-                    activity?.finish()
+                activity?.finish()
             }
         }
 
@@ -247,7 +257,7 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
          * 위치 권한 확인
          */
         if(this.context?.let { ContextCompat.checkSelfPermission(it, "android.permission.ACCESS_FINE_LOCATION") } == PackageManager.PERMISSION_GRANTED){
-           initMap()
+            initMap()
         }else{
             permissionLauncher.launch("android.permission.ACCESS_FINE_LOCATION")
         }
@@ -315,7 +325,7 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
             binding.parseLayout.visibility=View.VISIBLE
             binding.parseBtn.visibility=View.GONE
         }
-        
+
         /**
          * todo 다시시작
          */
@@ -370,7 +380,7 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
     }
 
     /**
-     * 마커 클릭 시, 
+     * 마커 클릭 시,
      * 1...동반 시설 디테일 정보 가져오기
      * 2...액티비티에 정보 보내기
      */
@@ -380,8 +390,8 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
         val code = tagList[1]
         var travelDetail:TravelDetail?=null
 
-        
-        
+
+
         // 동반 시설 디테일 정보 가져오기
         val travelNetService = (activity?.applicationContext as PetTravelAPI).networkService
         val travelDetailCall = travelNetService.doGetTravelDetail(code,number)
@@ -413,4 +423,3 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
     }
 
 }
-

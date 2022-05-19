@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission  android:name="br.com.lineapp.tofind.permission.MAPS_RECEIVE"/>
+
 
     <application
         android:name=".retrofit.PetTravelAPI"
@@ -19,20 +21,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Petwalk"
         android:usesCleartextTraffic="true">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_map_api" />
         <activity
             android:name=".calendar.CalendarDetail"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/title_activity_maps" />
         <activity
             android:name=".walk.WalkResultActivity"
             android:exported="false" />
         <activity
             android:name=".walk.WalkTravelDetailActivity"
             android:exported="false" />
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_map_api" />
-
         <activity
             android:name=".MainActivity"
             android:exported="true">
