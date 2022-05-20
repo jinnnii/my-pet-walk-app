@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.project.petwalk.calendar.CalAdapter
 import com.project.petwalk.databinding.FragmentFragCalendarBinding
@@ -36,6 +37,7 @@ class FragCalendar : Fragment(){
 
 
     //파이어베이스
+    val firebaseAuth = FirebaseAuth.getInstance()
     val database: FirebaseDatabase = FirebaseDatabase.getInstance()
     val userReference:DatabaseReference=database.getReference("Users")
     val walkReference: DatabaseReference = database.getReference("walk")
@@ -155,14 +157,13 @@ class FragCalendar : Fragment(){
      */
     fun getWalkData() {
         //todo 테스트 유저 사용하기
-        val testUserUid = "NQkNJArulWd4vAMN8wO9JOb9VUw2"
-        userReference.child(testUserUid).child("walk")
+        val userUID = firebaseAuth.currentUser?.uid
+        userReference.child(userUID!!).child("walkList")
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 @RequiresApi(Build.VERSION_CODES.O)
                 @SuppressLint("SimpleDateFormat", "NotifyDataSetChanged")
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val walkArr = dataSnapshot.value as Map<*, *>
-
 
                     for (walkData in walkArr) {
                         val key = walkData.key.toString()

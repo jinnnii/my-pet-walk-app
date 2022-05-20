@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".frag.FragMypage">
-
-    <!-- TODO: Update blank fragment layout -->
+    tools:context=".user.UserMyPageActivity">
 
     <TextView
         android:id="@+id/tvResult"
@@ -16,40 +15,11 @@
         android:layout_marginBottom="20dp"
         android:text="Login user" />
 
-
-    <LinearLayout
+    <ImageView
+        android:id="@+id/imageView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/profile1" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="프로필 사진 변경" />
-
-            <Button
-                android:id="@+id/button3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="프로필 사진 적용" />
-
-        </LinearLayout>
-
-
-    </LinearLayout>
+        android:src="@drawable/profile1" />
 
     <Button
         android:id="@+id/btnUserList"
@@ -58,16 +28,10 @@
         android:text="유저 목록" />
 
     <Button
-        android:id="@+id/btnPetList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="펫 목록" />
-
-    <Button
         android:id="@+id/btnMyinfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="내 정보 수정" />
+        android:text="내정보 보기" />
 
     <Button
         android:id="@+id/btnModify"
@@ -84,7 +48,6 @@
             android:id="@+id/btnLogout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
             android:text="로그아웃" />
 
         <Button
@@ -101,5 +64,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="" />
+
 
 </LinearLayout>

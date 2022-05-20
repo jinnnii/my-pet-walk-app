@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.project.petwalk.R
@@ -19,9 +20,11 @@ class WalkResultActivity : AppCompatActivity() {
     lateinit var locations:List<LocationModel>
 
     //파이어베이스
+    val firebaseAuth = FirebaseAuth.getInstance()
     val database: FirebaseDatabase = FirebaseDatabase.getInstance()
     val reference: DatabaseReference =database.getReference("locations")
     val walkReference: DatabaseReference = database.getReference("walk")
+    val userReference:DatabaseReference=database.getReference("Users")
 
 
     @SuppressLint("SetTextI18n")
@@ -84,6 +87,7 @@ class WalkResultActivity : AppCompatActivity() {
         //todo walk 객체 저장
         val location= LocationModel( lat, lon, time)
         reference.child(key).child(idx.toString()).setValue(location)
+
     }
 
     /**
@@ -95,6 +99,14 @@ class WalkResultActivity : AppCompatActivity() {
         walk.id=walkKey
         walk.memo=binding.edMemo.text.toString()
         walkReference.child(walkKey).setValue(walk)
+
+        sendUser(walkKey)
+    }
+
+    private fun sendUser(walkKey:String){
+        val userUid= firebaseAuth.currentUser?.uid.toString()
+        val walkData = mapOf(walkKey to true)
+        userReference.child(userUid).child("walkList").setValue(walkData)
     }
 
 }

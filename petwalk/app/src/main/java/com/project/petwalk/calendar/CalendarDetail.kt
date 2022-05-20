@@ -86,6 +86,8 @@ class CalendarDetail : AppCompatActivity() {
                         val locations = arrayListOf<LocationModel>()
                         for(snap in snapshot.children){
                             val location = snap.getValue(LocationModel::class.java)!!
+                            snap.getValue()
+                            location.latitude
                             locations.add(location)
                             Log.d("pet", ">>>>>>>>locationList$locations")
                         }

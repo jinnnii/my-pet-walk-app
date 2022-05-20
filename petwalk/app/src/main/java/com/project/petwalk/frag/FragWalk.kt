@@ -227,7 +227,7 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
         super.onViewCreated(view, savedInstanceState)
         locations = ArrayList()
 
-
+        Log.d("pet", "메인에서 받아온 walkList::::"+ arguments?.getSerializable("walkListtest").toString())
         mapFragment = (childFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment?)!!
 

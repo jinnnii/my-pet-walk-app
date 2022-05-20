@@ -1,35 +1,39 @@
 package com.project.petwalk
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
-import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
 import com.project.petwalk.databinding.ActivityMainBinding
 import com.project.petwalk.frag.*
-import com.project.petwalk.home.retrofit.ITEM
-import com.project.petwalk.home.retrofit.WEATHER
 import com.project.petwalk.home.retrofit.WeatherAPI
-import com.project.petwalk.model.Weather
+import com.project.petwalk.model.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
+interface FirebaseCallback{
+    fun success(data:Any)
+    fun fail(error:String)
+}
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding:ActivityMainBinding
     private val REQUEST_CODE_LOCATION = 2
-    var weather: Weather?=null
+
+    lateinit var user:User
+    lateinit var walkList:ArrayList<Walk>
+    lateinit var petList:ArrayList<Pet>
+    lateinit var profile:Images
+
+
+
+    val firebaseAuth = FirebaseAuth.getInstance()
+    val database: FirebaseDatabase = FirebaseDatabase.getInstance()
+
 
     fun changeFragment(frag: Fragment){
         supportFragmentManager
@@ -39,14 +43,13 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         binding.bottomNav.run {
+
+
             setOnItemSelectedListener { item->
                 when(item.itemId){
                     R.id.action_community->{
@@ -77,4 +80,7 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+
+
 }
