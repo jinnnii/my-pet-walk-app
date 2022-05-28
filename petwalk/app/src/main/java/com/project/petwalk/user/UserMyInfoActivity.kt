@@ -26,9 +26,9 @@ class UserMyInfoActivity : AppCompatActivity() {
 
     val callback = object:FirebaseUserHelper.DataStatus{
         @SuppressLint("SetTextI18n")
-        override fun DataIsLoaded(user: User) {
+        override fun DataIsLoaded(user: User?) {
 
-            this@UserMyInfoActivity.user =user
+            this@UserMyInfoActivity.user =user!!
 
             // 이메일 부분의 "@"앞쪽 부분을 잘라서 temp에 저장 (즉, 아이디 부분 저장)
             val temp = user.email.split("@")
@@ -38,7 +38,6 @@ class UserMyInfoActivity : AppCompatActivity() {
             // 해당 회원의 모든 정보를 불러옴
             binding.tvMyinfo.text = "${id}님의 정보수정"
             // 현재 유저의 email
-            binding.editEmail.setText(user.email)
             binding.editName.setText(user.name)
             binding.editPhone.setText(user.phone)
         }
@@ -82,8 +81,8 @@ class UserMyInfoActivity : AppCompatActivity() {
         //업데이트 버튼 클릭
         binding.button.setOnClickListener {
 
-            if(binding.editEmail.text.isEmpty()
-                || binding.editName.text.isEmpty() || binding.editPhone.text.isEmpty()
+            if(
+                binding.editName.text.isEmpty() || binding.editPhone.text.isEmpty()
             ){
                 Toast.makeText(
                     this@UserMyInfoActivity,
@@ -94,7 +93,7 @@ class UserMyInfoActivity : AppCompatActivity() {
                 // 수정된 data로 User객체를 새로 만든다.
                 val data = User(
                     user.uid,
-                    binding.editEmail.text.toString(),
+                    user.email,
                     binding.editName.text.toString(),
                     binding.editPhone.text.toString(),
                     walkList = user.walkList,

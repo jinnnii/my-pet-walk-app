@@ -14,11 +14,11 @@ class FirebaseUserHelper {
     var keys: ArrayList<String?>? = null
 
     interface DataStatus {
-        fun DataIsLoaded(user:User)
-        fun DataIsInserted()
-        fun DataIsUpdated()
-        fun DataIsDeleted()
-        fun NodeIsLoaded(b:ArrayList<Boolean>?, keys: ArrayList<String?>?)
+        fun DataIsLoaded(user:User?){}
+        fun DataIsInserted(){}
+        fun DataIsUpdated(){}
+        fun DataIsDeleted(){}
+        fun NodeIsLoaded(b:ArrayList<Boolean>?, keys: ArrayList<String?>?){}
     }
 
     init {
@@ -29,8 +29,8 @@ class FirebaseUserHelper {
     fun readUser(dataStatus: DataStatus,key:String) {
         mRefrenceUser?.child(key)?.addValueEventListener(object : ValueEventListener {
             override fun onDataChange( snapshot: DataSnapshot) {
-                val user = snapshot.getValue(User::class.java)
-                dataStatus.DataIsLoaded(user!!)
+                val user:User ?= snapshot.getValue(User::class.java)
+                dataStatus.DataIsLoaded(user)
             }
 
             override fun onCancelled(@NonNull error: DatabaseError) {}
@@ -58,23 +58,19 @@ class FirebaseUserHelper {
     }
 
     fun readUserWalkList(dataStatus: DataStatus,key:String){
-        mRefrenceUser!!.child(key).child("walkList").addValueEventListener(object : ValueEventListener {
-            override fun onDataChange( snapshot: DataSnapshot) {
-                nBases = arrayListOf()
-                nBases!!.clear()
-                keys = ArrayList()
-                keys!!.clear()
+        mRefrenceUser?.child(key)?.child("walkList")?.get()?.addOnSuccessListener {
+            nBases = arrayListOf()
+            nBases!!.clear()
+            keys = ArrayList()
+            keys!!.clear()
 
-                for (node in snapshot.children) {
-                    keys!!.add(node.key)
-                    val bool:Boolean? = node.getValue(Boolean::class.java)
-                    nBases!!.add(bool!!)
-                }
-                dataStatus.NodeIsLoaded(nBases, keys)
+            for (node in it.children) {
+                keys!!.add(node.key)
+                val bool:Boolean? = node.getValue(Boolean::class.java)
+                nBases!!.add(bool!!)
             }
-
-            override fun onCancelled(@NonNull error: DatabaseError) {}
-        })
+            dataStatus.NodeIsLoaded(nBases, keys)
+        }
     }
 
 
@@ -98,6 +94,10 @@ class FirebaseUserHelper {
 
     fun deleteUserPet(userUID:String, petUID:String,dataStatus: DataStatus){
         mRefrenceUser!!.child(userUID).child("petList").child(petUID).removeValue()
+            .addOnSuccessListener { dataStatus.DataIsDeleted() }
+    }
+    fun deleteUserPost(userUID:String, postUID:String,dataStatus: DataStatus){
+        mRefrenceUser!!.child(userUID).child("postList").child(postUID).removeValue()
             .addOnSuccessListener { dataStatus.DataIsDeleted() }
     }
 

@@ -3,6 +3,7 @@ package com.project.petwalk.Adapter
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 import com.project.petwalk.R
 import com.project.petwalk.community.CommunityModifyActivity
 import com.project.petwalk.databinding.CardPostBinding
@@ -57,8 +59,11 @@ class CommunityListAdapter(
         binding.contentsText.text=arrMessage[position]
         binding.timeTextView.text= getDiffTimeText(arrWriteTime[position])
         binding.commentCountText.text= arrCommentCount[position].toString()
-        Glide.with(binding.root.context).load(arrPostImages[position])
+        val into = Glide.with(binding.root.context).load(arrPostImages[position])
             .into(binding.imageView)
+
+        Log.d("kej", "${arrWriterId[position]}, ${FirebaseAuth.getInstance().currentUser?.uid}" )
+
 
         binding.contentsText.setOnClickListener {
             val intent = Intent(binding.root.context,CommunityModifyActivity::class.java)

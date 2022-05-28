@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".walk.WalkResultActivity">
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
         <TextView
             android:id="@+id/result"
             android:padding="20dp"
@@ -16,24 +19,25 @@
             android:textStyle="bold"
             android:text="TextView"
             android:paddingBottom="50dp"/>
+
         <EditText
             android:id="@+id/ed_memo"
-            android:padding="20dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="start|top"
-            android:inputType="textMultiLine"
-            android:textSize="16sp"
             android:background="@android:color/transparent"
-            android:hint="오늘 산책은 어땠는지 메모를 남겨주세요.(최대 300자)"/>
+            android:gravity="start|top"
+            android:hint="오늘 산책은 어땠는지 메모를 남겨주세요.(최대 300자)"
+            android:inputType="textMultiLine"
+            android:padding="20dp"
+            android:textSize="16sp" />
 
-
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:layout_alignParentBottom="true"
         android:gravity="bottom"
         android:orientation="vertical">
 
@@ -55,4 +59,4 @@
 
 
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

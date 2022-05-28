@@ -5,25 +5,24 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.project.petwalk.Adapter.CommentRecyclerviewAdapter
 import com.project.petwalk.model.Comment
 import com.project.petwalk.Post
 import com.project.petwalk.databinding.ActivityCommentBinding
 import com.project.petwalk.firebase.FirebaseCommentHelper
+import com.project.petwalk.firebase.FirebaseImageHelper
 import com.project.petwalk.firebase.FirebasePostHelper
+import com.project.petwalk.firebase.FirebaseUserHelper
 import com.project.petwalk.model.ImageModel
 import com.project.petwalk.model.User
 import kotlinx.android.synthetic.main.activity_comment.*
 
 class CommentActivity : AppCompatActivity() {
-    lateinit var arrCommentId:ArrayList<String>
-    lateinit var arrPostId:ArrayList<String>
-    lateinit var arrCommentWriterId:ArrayList<String>
-    lateinit var arrCommentMessage:ArrayList<String>
-
-    lateinit var arrWriteTime:ArrayList<Any>
+    val currentUserUID = FirebaseAuth.getInstance().currentUser?.uid.toString()
     lateinit var binding: ActivityCommentBinding
 
     val userList:ArrayList<User> = arrayListOf()
@@ -35,13 +34,25 @@ class CommentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCommentBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
         val postid = intent.getStringExtra("postId").toString()
-//        var commentCount = intent.getStringExtra("commentCount") as Long
-        Log.d("postid","$postid")
 
-        val commentId = fireDatabase.getReference().child("Comments").child(postid).push().key
-            .toString()
-
+        FirebaseUserHelper().readUser(object:FirebaseUserHelper.DataStatus{
+            override fun DataIsLoaded(user: User?) {
+                for(img in user!!.profile){
+                    FirebaseImageHelper().readImage(object:FirebaseImageHelper.DataStatus{
+                        override fun DataIsLoaded(image: ImageModel) {
+                            if (this@CommentActivity.isFinishing)return;
+                            Glide.with(this@CommentActivity)
+                                .load(image.imageUrl)
+                                .centerCrop()
+                                .into(binding.profileImg)
+                        }
+                    },img.key)
+                }
+            }
+        },currentUserUID)
 
         FirebasePostHelper().readCommentList(postid, postListener)
 
@@ -50,7 +61,7 @@ class CommentActivity : AppCompatActivity() {
             val commentText = CommentText.text.toString()
             val regDate = System.currentTimeMillis()
             val userUID = FirebaseAuth.getInstance().currentUser?.uid.toString()
-
+            CommentText.setText("")
             val comment = Comment("", postid, userUID, commentText, regDate)
             FirebaseCommentHelper().addComment(comment,postid, listener)
         }

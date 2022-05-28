@@ -35,7 +35,7 @@ class PetListAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val binding = (holder as PetListHolder).binding
-        Glide.with(binding.root.context).load(petList[position].profile)
+        Glide.with(binding.root.context).load(petList[position].profile).centerCrop()
             .into(binding.imgPet)
         binding.textView6.text = petList[position].animal
         binding.tvName.text = petList[position].name
@@ -51,7 +51,7 @@ class PetListAdapter(
             val petUID = petList[position].uid
             // 실시간 데이터베이스에 저장된 해당 계정 정보 삭제
             FirebaseUserHelper().deleteUserPet(userUID,petUID,object :FirebaseUserHelper.DataStatus{
-                override fun DataIsLoaded(user: User) {}
+                override fun DataIsLoaded(user: User?) {}
                 override fun DataIsInserted() {}
                 override fun DataIsUpdated() {}
                 override fun DataIsDeleted() {

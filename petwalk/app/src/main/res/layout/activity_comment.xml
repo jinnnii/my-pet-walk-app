@@ -9,49 +9,54 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/commentRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginBottom="80dp"/>
 
     <LinearLayout
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="10dp"
-        android:paddingHorizontal="20dp"
+        android:layout_alignParentBottom="true"
         android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:elevation="10dp"
         android:orientation="horizontal"
-        android:elevation="10dp">
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp">
+
         <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginRight="10dp"
+            android:layout_margin="5dp"
             app:cardCornerRadius="400dp">
-        <ImageView
-            android:id="@+id/profileImg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_baseline_person_24" />
+
+            <ImageView
+                android:id="@+id/profileImg"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_baseline_person_24" />
+
         </androidx.cardview.widget.CardView>
+
         <EditText
             android:id="@+id/CommentText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
             android:layout_weight="1"
-            android:inputType="text"
-            android:text="댓글작성"
             android:background="@null"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:hint="댓글작성"
+            android:inputType="text"
+            android:textSize="14sp" />
+
         <ImageButton
             android:id="@+id/commentSubmit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:layout_gravity="center_vertical"
-            android:text="전송"
+            android:layout_margin="10dp"
+            android:background="@null"
             android:src="@drawable/ic_baseline_send_24"
-            android:background="@null"/>
+            android:text="전송" />
 
 
     </LinearLayout>

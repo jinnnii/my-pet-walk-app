@@ -25,16 +25,12 @@ class FirebaseImageHelper {
 
 
     fun readImage(dataStatus: DataStatus, key:String) {
-        mRefrenceImage?.child(key)?.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange( snapshot: DataSnapshot) {
-                if(snapshot.value!==null){
-                    val image = snapshot.getValue(ImageModel::class.java) as ImageModel
-                    dataStatus.DataIsLoaded(image)
-                }
+        mRefrenceImage?.child(key)?.get()?.addOnSuccessListener {
+            if(it.value!==null){
+                val image = it.getValue(ImageModel::class.java) as ImageModel
+                dataStatus.DataIsLoaded(image)
             }
-
-            override fun onCancelled(@NonNull error: DatabaseError) {}
-        })
+        }
     }
 
 

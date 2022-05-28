@@ -117,7 +117,10 @@ class FragHome : Fragment(){
         val hdf = SimpleDateFormat("HH")
 
         val currentTime = sdf.format(System.currentTimeMillis())
-        val curHour = (hdf.format(System.currentTimeMillis()).toInt()-1).toString()
+        var curHour = (hdf.format(System.currentTimeMillis()).toInt()-1).toString()
+        if (curHour.length==1){
+            curHour = "0$curHour"
+        }
         val timeStr = curHour+"00"
         Log.d("kej", "weather >>>>> $currentTime, $timeStr, $nx, $ny")
 
@@ -130,7 +133,6 @@ class FragHome : Fragment(){
                         Log.d("kej", response.body().toString())
                         return
                     }
-                    Log.d("kej", response.body().toString())
                     val it: List<ITEM> = response.body()!!.response.body.items.item
 
                     val weatherArr = arrayOf(Weather(), Weather(), Weather(), Weather(), Weather(), Weather())
@@ -151,9 +153,10 @@ class FragHome : Fragment(){
                     for (i in 0..5) weatherArr[i].fcstTime = it[i].fcstTime
                     weather = weatherArr[0]
                     // 각 날짜 배열 시간 설정
-                    Log.d("pet",">>>>>>>>>>>>>>>>>>"+weatherArr[0].toString())
+                    Log.d("kej",">>>>>>>>>>>>>>>>>>"+weatherArr[0].toString())
                     getRainImage(weather.rainType!!, weather.sky!!)
                     changeWeatherImage()
+                    binding.tvTemp.text= "기온 : ${weather.temp}"
                 }
 
             }

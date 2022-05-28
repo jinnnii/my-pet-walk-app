@@ -67,7 +67,7 @@ class UserPetListActivity : AppCompatActivity() {
     fun getPetListData(){
         petList = arrayListOf<Pet>()
         FirebaseUserHelper().readUserPetList(object:FirebaseUserHelper.DataStatus{
-            override fun DataIsLoaded(user: User) {}
+            override fun DataIsLoaded(user: User?) {}
             override fun DataIsInserted() {}
             override fun DataIsUpdated() {}
             override fun DataIsDeleted() {}

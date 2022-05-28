@@ -16,12 +16,12 @@ class FirebasePostHelper {
     private var keys:ArrayList<String?>?=null
 
     interface DataStatus {
-        fun DataIsLoaded(post: Post)
-        fun ImageIsLoaded(img:ImageModel)
-        fun DataIsInserted()
-        fun DataIsUpdated()
-        fun DataIsDeleted()
-        fun NodeIsLoaded(comments: ArrayList<String?>?)
+        fun DataIsLoaded(post: Post){}
+        fun ImageIsLoaded(img:ImageModel){}
+        fun DataIsInserted(){}
+        fun DataIsUpdated(){}
+        fun DataIsDeleted(){}
+        fun NodeIsLoaded(comments: ArrayList<String?>?){}
     }
 
     init {
@@ -98,8 +98,8 @@ class FirebasePostHelper {
 
     }
 
-    fun updatePost(key: String?, post: Post?, dataStatus: DataStatus) {
-        mRefrencePost!!.child(key!!).setValue(post)
+    fun updatePost(post: Post?, dataStatus: DataStatus) {
+        mRefrencePost!!.child(post?.uid!!).setValue(post)
             .addOnSuccessListener { dataStatus.DataIsUpdated() }
     }
 

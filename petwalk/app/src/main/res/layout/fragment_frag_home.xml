@@ -30,7 +30,7 @@
             android:layout_marginTop="10dp"
             android:textStyle="bold"
             android:textColor="@color/white"
-            android:text="날씨 : 맑음"/>
+            android:text="날씨 : null"/>
         <TextView
             android:id="@+id/tv_temp"
             android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
             android:layout_marginLeft="40dp"
             android:textStyle="bold"
             android:textColor="@color/white"
-            android:text="기온 : 19도"/>
+            android:text="기온 : null"/>
     </LinearLayout>
     <LinearLayout
         android:orientation="vertical"

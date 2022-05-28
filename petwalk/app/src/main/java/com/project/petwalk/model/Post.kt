@@ -1,5 +1,7 @@
 package com.project.petwalk
 
+import java.io.Serializable
+
 data class Post (
 //    글의 ID
     var uid:String = "",
@@ -14,4 +16,4 @@ data class Post (
     //    댓글의 개수
     var commentCount:Int = 0,
     var commentList:Map<String,Boolean> = mapOf(),
-)
+):Serializable

@@ -1,82 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".community.CommunityWriteActivity">
+    android:weightSum="5"
+    tools:context=".community.CommunityWriteActivity"
+    android:background="@color/white">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline1"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="366dp" />
-
-    <ImageView
-        android:id="@+id/mod_background"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toTopOf="@+id/guideline1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="100dp"
+        android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/default_bg" />
+        tools:layout_editor_absoluteX="16dp">
 
-    <EditText
-        android:id="@+id/mod_input"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#aa000000"
-        android:ems="10"
-        android:gravity="top"
-        android:hint="따뜻한 글을 써주세요"
-        android:inputType="textMultiLine"
-        android:padding="4dp"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/darker_gray"
-        app:layout_constraintBottom_toBottomOf="@+id/mod_background"
-        app:layout_constraintEnd_toEndOf="@id/mod_background"
-        app:layout_constraintStart_toStartOf="@+id/mod_background"
-        app:layout_constraintTop_toTopOf="@+id/mod_background" />
+        <ImageView
+            android:id="@+id/modify_back"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/default_image" />
+
+        <EditText
+            android:id="@+id/modify_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            android:hint="따뜻한 글을 써주세요"
+            android:inputType="textMultiLine"
+            android:padding="4dp" />
+
+    </LinearLayout>
+
 
     <Button
-        android:id="@+id/mod_btn"
-        android:layout_width="0dp"
+        android:id="@+id/modifyButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="공유하기"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/mod_input"
-        app:layout_constraintStart_toStartOf="@+id/mod_input" />
-
-    <Button
-        android:id="@+id/add_image"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="88dp"
-        android:text="배경사진 추가"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/mod_input"
-        app:layout_constraintStart_toStartOf="@+id/mod_input" />
-    <Button
-        android:id="@+id/apply_image"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
-        android:text="배경사진 저장"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/mod_input"
-        app:layout_constraintStart_toStartOf="@+id/mod_input" />
+        android:background="@color/main_green"
+        android:layout_alignParentBottom="true"
+        android:text="수정하기"
+        android:textColor="@color/white" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>

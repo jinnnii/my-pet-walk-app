@@ -31,20 +31,21 @@ class CalAdapter(val context: Context, val days:List<String>?, val walkList:List
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder
     = CalViewHolder(ItemCalendarBinding.inflate(LayoutInflater.from(parent.context),parent,false))
 
-    @SuppressLint("SimpleDateFormat")
+    @SuppressLint("SimpleDateFormat", "ResourceAsColor")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int ) {
         val binding = (holder as CalViewHolder).binding
         val day=days?.get(position)
 
         val walk = checkWalk(day!!)
+        binding.calDayTxt.text=day
 
         if(walk!=null){
             binding.calMark.visibility= View.VISIBLE
+            binding.calDayTxt.setTextColor(R.color.white)
             binding.calDayTxt.tag=walk
             binding.calDayTxt.setOnClickListener(this)
         }
 
-        binding.calDayTxt.text=day
 
 //        binding.calDayTxt.setOnClickListener{
 ////            itemClickListener.onClick(it,position)

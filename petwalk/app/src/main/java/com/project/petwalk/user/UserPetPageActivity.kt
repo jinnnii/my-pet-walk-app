@@ -83,19 +83,16 @@ class UserPetPageActivity : AppCompatActivity() {
             FirebasePetHelper().addPet(pet, userUID, object : FirebasePetHelper.DataStatus {
                 override fun DataIsLoaded(pet: Pet) {}
                 override fun DataIsInserted() {
-
                 }
                 override fun DataIsUpdated() {}
                 override fun DataIsDeleted() {}
             })
-
             mDialog.dismiss()
 
 
             val intent = Intent();
             setResult(RESULT_OK, intent);
             finish();
-
         }
     }
 
@@ -117,6 +114,7 @@ class UserPetPageActivity : AppCompatActivity() {
                 try {
                     imageUri = data!!.data!!
                     Glide.with(this).load(imageUri)
+                        .centerCrop()
                         .into(binding.imageView3) //다이얼로그 이미지사진에 넣기
                 } catch (e: Exception) {
                 }

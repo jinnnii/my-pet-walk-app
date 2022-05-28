@@ -52,10 +52,10 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
 
     lateinit var mapFragment:SupportMapFragment
 
-    lateinit var pathPoly:PolylineOptions
+    var pathPoly:PolylineOptions? = null
 
     //지도
-    private lateinit var mMap: GoogleMap
+    var mMap: GoogleMap?=null
 
     //동반 시설 분류 코드
     val PART_CODE = arrayOf("PC01", "PC02", "PC03", "PC04", "PC05")
@@ -89,8 +89,11 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
                 .target(LatLng(userLocation.latitude, userLocation.longitude))
                 .zoom(19F)
                 .build()
-            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-            mMap.isMyLocationEnabled=true
+            mMap!!.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+            mMap!!.isMyLocationEnabled=true
+
+
+
         }
 
     }
@@ -110,11 +113,11 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
             val position = LatLng(lat, lng)
             val markerOptions = MarkerOptions()
             markerOptions.icon(bitmapDescriptorFromVector(context, mk))
-            val marker: Marker? = mMap.addMarker(markerOptions.position(position).title(title))
+            val marker: Marker? = mMap?.addMarker(markerOptions.position(position).title(title))
 
             marker?.tag= "$id,$code"
         }
-        mMap.setOnMarkerClickListener(this)
+        mMap?.setOnMarkerClickListener(this)
     }
 
     /**
@@ -144,9 +147,9 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
 //            val end = LatLng(locations[size].latitude, locations[size].longitude)
 //            val path:PolylineOptions  = PolylineOptions().add(start).width(60F).color(R.color.path_green).geodesic(true)
             val lastLoc = LatLng(locations[size].latitude, locations[size].longitude)
-            pathPoly.add(lastLoc)
-            mMap.addPolyline(pathPoly)
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLoc, 19F))
+            pathPoly?.add(lastLoc)
+            mMap?.addPolyline(pathPoly!!)
+            mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLoc, 19F))
         }
     }
 
@@ -174,6 +177,7 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
 
     private val initListener :LocationListener=object :LocationListener{
         override fun onLocationChanged(location: Location) {
+            locations.clear()
             locations.add(LocationModel(location.latitude, location.longitude, location.time))
             val location = locations[0]
 
@@ -182,6 +186,38 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
             pathPoly = PolylineOptions().add(LatLng(location.latitude, location.longitude)).width(50F).color(Color.parseColor("#99B3B1")).geodesic(true)
 
             manager?.removeUpdates(this)
+
+            /**
+             * 반려동물 동반 장소 api 사용
+             */
+//            val travelNetService = (activity?.applicationContext as PetTravelAPI).networkService
+
+            for(idx in PART_CODE.indices) {
+//                val travelListCall = travelNetService.doGetTravelList("1", "133", PART_CODE[idx])
+                val travelListCall = PetTravelAPI.networkService.doGetTravelList("1", "133", PART_CODE[idx])
+
+                travelListCall.enqueue(object : Callback<List<TravelList>> {
+                    override fun onResponse(
+                        call: Call<List<TravelList>>,
+                        response: Response<List<TravelList>>
+                    ) {
+                        if (response.isSuccessful) {
+                            Log.d("pet", response.body()?.get(0)?.resultList.toString())
+                            val travelList: List<Travel> = response.body()?.get(0)?.resultList!!
+                            drawMark(travelList, PART_CODE[idx], MARKER[idx])
+
+                        } else {
+                            Log.d("pet", "failed")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<TravelList>>, t: Throwable) {
+                        call.cancel()
+                    }
+
+
+                })
+            }
         }
 
     }
@@ -201,7 +237,7 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
                 locations[size].longitude)
 
 
-            Log.d("pet","${location.latitude},${location.longitude}, ${location.time}")
+            Log.d("kej","${location.latitude},${location.longitude}, ${location.time}")
             Log.d("pet", locations.toString())
         }
 
@@ -254,6 +290,8 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
         if(this.context?.let { ContextCompat.checkSelfPermission(it, "android.permission.ACCESS_FINE_LOCATION") } == PackageManager.PERMISSION_GRANTED){
             initMap()
             init()
+
+
         }else{
             permissionLauncher.launch("android.permission.ACCESS_FINE_LOCATION")
         }
@@ -279,37 +317,7 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
             // todo  최소 10초, 최소 10m 마다 위치 확인
             manager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000L, 0f, listener)
 
-            /**
-             * 반려동물 동반 장소 api 사용
-             */
-//            val travelNetService = (activity?.applicationContext as PetTravelAPI).networkService
 
-            for(idx in PART_CODE.indices) {
-//                val travelListCall = travelNetService.doGetTravelList("1", "133", PART_CODE[idx])
-                val travelListCall = PetTravelAPI.networkService.doGetTravelList("1", "133", PART_CODE[idx])
-
-                travelListCall.enqueue(object : Callback<List<TravelList>> {
-                    override fun onResponse(
-                        call: Call<List<TravelList>>,
-                        response: Response<List<TravelList>>
-                    ) {
-                        if (response.isSuccessful) {
-                            Log.d("pet", response.body()?.get(0)?.resultList.toString())
-                            val travelList: List<Travel> = response.body()?.get(0)?.resultList!!
-                            drawMark(travelList, PART_CODE[idx], MARKER[idx])
-
-                        } else {
-                            Log.d("pet", "failed")
-                        }
-                    }
-
-                    override fun onFailure(call: Call<List<TravelList>>, t: Throwable) {
-                        call.cancel()
-                    }
-
-
-                })
-            }
         }
 
         /**
@@ -342,18 +350,18 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
             endDate=System.currentTimeMillis()
 
 
-            val timeSec = binding.chronometer.drawingTime-binding.chronometer.base
-            Log.d("kej", "timeSec::::${timeSec.toString()}")
+            val timeSec =  SystemClock.elapsedRealtime()-binding.chronometer.base
+            Log.d("kej", "timeSec::::${timeSec}")
             val walk = Walk(initDistance, startDate, endDate, timeSec, mapOf(),"","")
 
 
             init()
 
             // todo walk 객체 전송
-//            val intent = Intent(context, WalkResultActivity::class.java)
-//            intent.putExtra("walk", walk)
-//            intent.putExtra("locations", locations)
-//            startActivityForResult(intent,3000)
+            val intent = Intent(context, WalkResultActivity::class.java)
+            intent.putExtra("walk", walk)
+            intent.putExtra("locations", locations)
+            startActivityForResult(intent,3000)
 
         }
 
@@ -373,12 +381,13 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
         binding.distance.text="0.0"
 
         manager?.removeUpdates(listener)
-
+        if(mMap!=null) mMap?.clear()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.d("pet",">>>>>>>>>>>>>>>>>>>>>>>>>"+resultCode.toString())
+        Log.d("kej",">>>>>>>>>>>>>>>>>>>>>>>>>"+resultCode.toString())
+        init()
         initMap()
     }
 

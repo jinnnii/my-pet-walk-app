@@ -58,24 +58,26 @@ class CalendarDetail : AppCompatActivity() {
 
     fun setUserProfile(){
         FirebaseUserHelper().readUser(object:FirebaseUserHelper.DataStatus{
-            override fun DataIsLoaded(user: User) {
+            override fun DataIsLoaded(user: User?) {
                 var imageUID: String? =null
-                for(uid in user.profile){
-                    imageUID = uid.key
-                }
+                if(user!=null){
+                    for(uid in user.profile){
+                        imageUID = uid.key
+                        FirebaseImageHelper().readImage(object:FirebaseImageHelper.DataStatus{
+                            override fun DataIsLoaded(image: ImageModel) {
+                                this@CalendarDetail.user=user
+                                if(this@CalendarDetail.isFinishing) return
+                                Glide
+                                    .with(this@CalendarDetail)
+                                    .load(image.imageUrl)
+                                    .centerCrop()
+                                    .fallback(R.drawable.default_image) //로드할 url이 비어있을 시 표시할 이미지
+                                    .into(binding.userProfile)
+                            }
 
-                FirebaseImageHelper().readImage(object:FirebaseImageHelper.DataStatus{
-                    override fun DataIsLoaded(image: ImageModel) {
-                        this@CalendarDetail.user =user
-                        Glide
-                            .with(this@CalendarDetail)
-                            .load(image.imageUrl)
-                            .fallback(R.drawable.default_image) //로드할 url이 비어있을 시 표시할 이미지
-                            .into(binding.userProfile)
-                        binding.userId.text=user.email.split("@").get(0)
+                        },imageUID.toString())
                     }
-
-                },imageUID.toString())
+                }
 
             }
             override fun DataIsInserted() {}
@@ -98,6 +100,7 @@ class CalendarDetail : AppCompatActivity() {
         binding.tvDistanceKm.text= walk.distance.toString()
         binding.tvStartDate.text = startDate
         binding.tvEndDate.text=endDate
+        binding.tvMemo.text=walk.memo
     }
 
     fun toolbarAction(){

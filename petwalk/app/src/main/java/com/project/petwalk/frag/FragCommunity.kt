@@ -12,19 +12,26 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.project.petwalk.Post
 import com.project.petwalk.R
 import com.project.petwalk.community.CommentActivity
+import com.project.petwalk.community.CommunityModifyActivity
 import com.project.petwalk.community.CommunityWriteActivity
+import com.project.petwalk.databinding.ActivityCommunityModifyBinding
 import com.project.petwalk.databinding.FragmentFragCommunityBinding
+import com.project.petwalk.firebase.FirebaseCommentHelper
 import com.project.petwalk.firebase.FirebasePostHelper
 import com.project.petwalk.firebase.FirebaseUserHelper
+import com.project.petwalk.model.Comment
 import com.project.petwalk.model.ImageModel
+import com.project.petwalk.model.User
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.card_background.view.*
 import kotlinx.android.synthetic.main.card_background.view.imageView
@@ -42,7 +49,7 @@ import kotlin.collections.ArrayList
 
 class FragCommunity : Fragment() {
     lateinit var binding: FragmentFragCommunityBinding
-
+    val currentUser = FirebaseAuth.getInstance().currentUser?.uid
     val posts: MutableList<Post> = mutableListOf()
 
     // 로그에 TAG로 사용할 문자열
@@ -111,13 +118,13 @@ class FragCommunity : Fragment() {
                                 // 글 목록을 저장하는 변수에 post 객체 추가
                                 posts.add(it)
                                 // RecyclerView 의 adapter 에 글이 추가된 것을 알림
-                                recyclerView.adapter?.notifyItemInserted(posts.size - 1)
+                                recyclerView.adapter?.notifyItemInserted(posts.size)
                             } else {
                                 // 글이 중간에 삽입된 경우 prevChildKey 로 한단계 앞의 데이터의 위치를 찾은 뒤 데이터를 추가한다.
                                 val prevIndex = posts.map { it.uid }.indexOf(previousChildName)
                                 posts.add(prevIndex + 1, post)
                                 // RecyclerView 의 adapter 에 글이 추가된 것을 알림
-                                recyclerView.adapter?.notifyItemChanged(prevIndex + 1)
+                                recyclerView.adapter?.notifyItemChanged(prevIndex)
                             }
                         }
                     }
@@ -228,6 +235,7 @@ class FragCommunity : Fragment() {
         val commentCountText : TextView = itemView.commentCountText
 
         val commentImageView : ImageButton = itemView.commentImage
+        val postMenu = itemView.post_menu
     }
 
     // RecyclerView 의 어댑터 클래스
@@ -250,8 +258,6 @@ class FragCommunity : Fragment() {
                     override fun ImageIsLoaded(img: ImageModel) {
                         val imageURL=img.imageUrl
 
-                        Log.d("kej", "get post uri::: !!! $imageURL")
-                        // 배경 이미지 설정
                         Glide.with(context!!)
                             .load(imageURL)
                             .fitCenter()
@@ -266,6 +272,27 @@ class FragCommunity : Fragment() {
                 },imageUID)
             }
 //            Picasso.get().load(Uri.parse(imageURL)).fit().centerCrop().into(holder.imageView)
+
+            if(post.writerId==currentUser){
+                holder.postMenu.visibility=View.VISIBLE
+                holder.postMenu.setOnMenuItemClickListener{
+                    when(it?.itemId){
+                        R.id.delete_post->{
+                            Log.d("kej","postMenu delete click ::: ${post.uid}")
+                            deletePost(post,position)
+                        }
+                        R.id.update_post->{
+                            Log.d("kej","postMenu update click ::: ${post.uid}")
+                            val intent = Intent(context, CommunityModifyActivity::class.java)
+                            intent.putExtra("post",post)
+                            startActivity(intent)
+                        }
+                    }
+                    return@setOnMenuItemClickListener true
+                }
+
+            }
+
             // 카드에 글을 세팅
             holder.contentsText.text = post.message
             // 글이 쓰여진 시간
@@ -317,4 +344,34 @@ class FragCommunity : Fragment() {
     }
 
 
+    fun deletePost(post:Post,position:Int){
+        FirebasePostHelper().deletePost(post.uid,object:FirebasePostHelper.DataStatus{
+            override fun DataIsDeleted() {
+                FirebaseUserHelper().deleteUserPost(currentUser.toString(),post.uid,object:FirebaseUserHelper.DataStatus{
+                    override fun DataIsLoaded(user: User?) { }
+                    override fun DataIsInserted() {}
+                    override fun DataIsUpdated() {}
+                    override fun DataIsDeleted() {
+                        for(comment in post.commentList){
+                            FirebaseCommentHelper().deleteComment(comment.key, object :FirebaseCommentHelper.DataStatus{
+                                override fun DataIsLoaded(comment: Comment, user: User) {}
+                                override fun DataIsInserted() { }
+                                override fun DataIsUpdated() {}
+                                override fun DataIsDeleted() {recyclerView.adapter?.notifyItemRemoved(position)}
+                            })
+                        }
+                    }
+                    override fun NodeIsLoaded(b: ArrayList<Boolean>?, keys: ArrayList<String?>?) {}
+                })
+            }
+
+        })
+    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        if (requestCode == 1000) {
+//            if (resultCode == AppCompatActivity.RESULT_OK) {
+//
+//            }
+//        }
+//    }
 }

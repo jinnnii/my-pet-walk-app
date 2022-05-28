@@ -10,11 +10,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.FirebaseDatabase
 import com.project.petwalk.MainActivity
 import com.project.petwalk.R
 import com.project.petwalk.databinding.ActivityUserLoginBinding
+import com.project.petwalk.firebase.FirebaseUserHelper
 import com.project.petwalk.model.Images
 import com.project.petwalk.model.User
 
@@ -42,6 +44,27 @@ class UserLoginActivity : AppCompatActivity() {
         binding.googleSignInBtn.setOnClickListener {
             signIn()
         }
+
+
+        val currentUser:String?=firebaseAuth.currentUser?.uid
+        Log.d("kej", "current USer :::: $currentUser")
+//        FirebaseUserHelper().readUser(object:FirebaseUserHelper.DataStatus{
+//            override fun DataIsLoaded(user: User?) {
+//                if(user!=null){
+//                    val intent = Intent(this@UserLoginActivity, MainActivity::class.java)
+//                    startActivity(intent)
+//                    finish()
+//                }
+//            }
+//        },currentUser.toString())
+        if(currentUser!=null){
+            val intent = Intent(this@UserLoginActivity, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+
+
 
         // 가입 버튼이 눌리면
         binding.ClickRegister.setOnClickListener {

@@ -33,22 +33,17 @@ class FirebaseCommentHelper {
 
 
     fun readComments(dataStatus: DataStatus, key:String) {
-        mRefrenceComment?.child(key)?.addValueEventListener(object:ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                Log.d("kej", "getCommentItem>>>>>!!! ${snapshot.value}")
-                val comment = snapshot.getValue(Comment::class.java)
+        mRefrenceComment?.child(key)?.get()?.addOnSuccessListener {
+            Log.d("kej", "getCommentItem>>>>>!!! ${it.value}")
+            val comment = it.getValue(Comment::class.java)
+            if(comment!=null){
                 mReferenceUser?.child(comment!!.writerId)?.get()?.addOnSuccessListener {
                     val user = it.getValue(User::class.java) as User
 
                     dataStatus.DataIsLoaded(comment, user)
                 }
-
             }
-
-            override fun onCancelled(error: DatabaseError) {
-            }
-
-        })
+        }
 
     }
 
@@ -89,4 +84,5 @@ class FirebaseCommentHelper {
             dataStatus.DataIsDeleted()
         }
     }
+
 }

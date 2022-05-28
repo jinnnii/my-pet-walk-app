@@ -164,7 +164,7 @@ class FragCalendar : Fragment(){
 
         //펫 리스트 담기
         FirebaseUserHelper().readUserWalkList(object : FirebaseUserHelper.DataStatus {
-            override fun DataIsLoaded(user: User) {}
+            override fun DataIsLoaded(user: User?) {}
             override fun DataIsInserted() {}
             override fun DataIsUpdated() {}
             override fun DataIsDeleted() {}

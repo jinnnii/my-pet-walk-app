@@ -54,7 +54,11 @@ class FragMypage : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentFragMypageBinding.inflate(inflater, container, false)
+        return binding.root
 
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // 로그인하고 있는 회원의 이메일을 받아서 출력한다.
         val userAuth = firebaseAuth.currentUser
         val userUID = firebaseAuth.currentUser?.uid.toString()
@@ -64,8 +68,7 @@ class FragMypage : Fragment() {
         val temp = email.split("@")
         // 생성한 temp를 id에 저장
         val id = temp[0]
-        binding.tvResult.text = "${id}님의 마이페이지"
-
+        binding.tvResult.text = "${id}"
         databaseRef.child("Users").child(userUID)
             .addListenerForSingleValueEvent(object :ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -134,6 +137,7 @@ class FragMypage : Fragment() {
             // 실시간 데이터베이스에 저장된 해당 계정 정보 삭제
             databaseRef.child("Users").child(id).removeValue()
             databaseRef.child("images").child(id).removeValue()
+            firebaseAuth.signOut()
             // 성공 메시지 출력
             Toast.makeText(activity, "성공적으로 탈퇴되었습니다.", Toast.LENGTH_LONG).show()
             // 로그인 액티비티로 이동
@@ -148,23 +152,11 @@ class FragMypage : Fragment() {
             startActivityForResult(intent, REQUEST_CODE)
         }
 
-        // 프로필 사진 업로드
-        binding.button3.setOnClickListener {
-            if (imageUri != null) {
-                mDialog = ProgressDialog(this.requireActivity())
-                mDialog.setMessage("적용중입니다...")
-                mDialog.show()
-                uploadToFirebase(imageUri!!);
-            } else {
-                Toast.makeText(activity, "사진을 선택해주세요.", Toast.LENGTH_SHORT).show();
-            }
-        }
-
         binding.btnPetList.setOnClickListener {
             val intent = Intent(context, UserPetListActivity::class.java)
             startActivity(intent)
         }
-        return binding.root
+
     }
 
     fun setView(user:User){
@@ -176,6 +168,7 @@ class FragMypage : Fragment() {
         }
         Log.d("kej","profileUID>>>>>$profileUID")
 
+
         databaseRef.child("profileImages").child(profileUID)
             .get().addOnSuccessListener {
                 val Urimap = it.getValue(Images::class.java)
@@ -184,6 +177,8 @@ class FragMypage : Fragment() {
                 if(profileUrl==""){
                     binding.imageView3.setImageResource(R.drawable.profile1)
                 }else{
+                    if (activity==null || activity?.isFinishing==true) return@addOnSuccessListener;
+                    Log.d("kej", "load image ::: $activity ,,, ${activity?.isFinishing}")
                     Glide
                         .with(this)
                         .load(profileUrl)
@@ -224,7 +219,17 @@ class FragMypage : Fragment() {
             if (resultCode == AppCompatActivity.RESULT_OK) {
                 try {
                     imageUri = data!!.data!!
-                    Glide.with(this.requireActivity().applicationContext).load(imageUri)
+
+                    mDialog = ProgressDialog(this.requireActivity())
+                    mDialog.setMessage("적용중입니다...")
+                    mDialog.show()
+                    uploadToFirebase(imageUri!!);
+
+
+                    Glide
+                        .with(this.requireActivity().applicationContext)
+                        .load(imageUri)
+                        .centerCrop()
                         .into(binding.imageView3) //다이얼로그 이미지사진에 넣기
                 } catch (e: Exception) {
                 }
