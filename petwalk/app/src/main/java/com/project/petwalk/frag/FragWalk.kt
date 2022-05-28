@@ -89,7 +89,7 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
                 .target(LatLng(userLocation.latitude, userLocation.longitude))
                 .zoom(19F)
                 .build()
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
             mMap.isMyLocationEnabled=true
         }
 
@@ -343,17 +343,17 @@ class FragWalk : Fragment(), GoogleMap.OnMarkerClickListener {
 
 
             val timeSec = binding.chronometer.drawingTime-binding.chronometer.base
-
+            Log.d("kej", "timeSec::::${timeSec.toString()}")
             val walk = Walk(initDistance, startDate, endDate, timeSec, mapOf(),"","")
 
 
             init()
 
             // todo walk 객체 전송
-            val intent = Intent(context, WalkResultActivity::class.java)
-            intent.putExtra("walk", walk)
-            intent.putExtra("locations", locations)
-            startActivityForResult(intent,3000)
+//            val intent = Intent(context, WalkResultActivity::class.java)
+//            intent.putExtra("walk", walk)
+//            intent.putExtra("locations", locations)
+//            startActivityForResult(intent,3000)
 
         }
 

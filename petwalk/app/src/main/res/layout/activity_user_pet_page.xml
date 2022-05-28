@@ -5,31 +5,46 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="20dp"
+    android:padding="40dp"
+    android:background="@color/second_green"
     tools:context=".frag.FragMypage">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="32sp"
+        android:textSize="24sp"
         android:textStyle="bold"
-        android:textColor="@color/second_green"
-        android:lineHeight="50sp"
+        android:textColor="@color/white"
         android:text="반려동물의 \n프로필을 추가해요"/>
 
-
+    <androidx.cardview.widget.CardView
+        android:layout_marginVertical="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="5dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="20dp">
     <RelativeLayout
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
         android:layout_marginTop="20dp">
-
+        <androidx.cardview.widget.CardView
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            app:cardCornerRadius="400dp">
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/profile1" />
+            android:background="@color/light_gray"/>
+        </androidx.cardview.widget.CardView>
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -87,7 +102,8 @@
             android:layout_marginBottom="10dp"
             android:hint="품종이 무엇인가요?"/>
     </LinearLayout>
-
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -98,7 +114,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:background="@color/second_green"
+            android:background="@color/main_green"
             android:textColor="@color/white"
             android:text="등록하기" />
     </LinearLayout>

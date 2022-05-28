@@ -20,13 +20,14 @@
                 app:expandedTitleMarginStart="20dp"
                 app:expandedTitleMarginBottom="20dp"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                android:background="@color/white"
+                android:background="@color/d_light_gray"
                 android:elevation="10dp">
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/tool_bar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     app:layout_collapseMode="pin"
+                    app:menu="@menu/top_return_bar"
                     app:layout_scrollFlags="scroll|enterAlways"/>
 
                 <LinearLayout
@@ -40,14 +41,15 @@
                         android:layout_height="100dp"
                         android:layout_gravity="center"
                         app:cardCornerRadius="300dp">
+
                         <ImageView
                             android:id="@+id/user_profile"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:scaleType="centerCrop"
+                            android:src="@drawable/ic_baseline_person_24"
                             app:layout_collapseMode="parallax"
-                            app:layout_scrollFlags="scroll"
-                            android:src="@drawable/ic_baseline_person_24"/>
+                            app:layout_scrollFlags="scroll" />
                     </androidx.cardview.widget.CardView>
                     <TextView
                         android:id="@+id/user_id"
@@ -80,33 +82,40 @@
                     android:layout_marginVertical="20dp"
                     android:orientation="horizontal">
                     <ImageView
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
                         android:src="@drawable/ic_baseline_access_time_24"/>
                     <TextView
                         android:id="@+id/tv_used_time"
                         android:layout_width="wrap_content"
                         android:layout_height="42dp"
                         android:text="05:00"
-                        android:textSize="30sp"
+                        android:textSize="24sp"
                         android:gravity="center"
                         android:textStyle="bold"
                         android:layout_marginHorizontal="20dp"/>
                     <ImageView
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
                         android:src="@drawable/ic_baseline_directions_walk_24"/>
                     <TextView
                         android:id="@+id/tv_distance_km"
                         android:layout_width="wrap_content"
                         android:layout_height="42dp"
                         android:text="5km"
-                        android:textSize="30sp"
+                        android:textSize="24sp"
                         android:textStyle="bold"
                         android:gravity="center"
                         android:layout_marginHorizontal="20dp"/>
 
                 </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_memo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="memo"
+                    android:textSize="16sp"
+                    android:padding="30dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"

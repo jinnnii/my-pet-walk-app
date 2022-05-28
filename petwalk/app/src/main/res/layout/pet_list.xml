@@ -59,7 +59,7 @@
         android:id="@+id/btnKick"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:src="@drawable/ic_baseline_cancel_24"
+        android:src="@drawable/ic_baseline_clear_24"
         android:background="@color/white"
         android:text="추방" />
 </LinearLayout>

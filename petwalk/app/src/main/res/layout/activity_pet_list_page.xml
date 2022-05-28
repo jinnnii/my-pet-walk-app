@@ -44,7 +44,9 @@
             android:clickable="true"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            app:srcCompat="@android:drawable/ic_input_add"/>
+            app:srcCompat="@android:drawable/ic_input_add"
+            android:backgroundTint="@color/main_green"
+            android:tint="@color/white"/>
     </RelativeLayout>
 
 </FrameLayout>
