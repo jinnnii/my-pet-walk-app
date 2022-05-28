@@ -20,13 +20,37 @@
         <entry key="..\:/andproject/petwalk/petwalk/app/src/main/res/layout/fragment_frag_community.xml" value="0.35052083333333334" />
         <entry key="..\:/andproject/petwalk/petwalk/app/src/main/res/layout/fragment_frag_home.xml" value="0.12698412698412698" />
         <entry key="..\:/andproject/petwalk/petwalk/app/src/main/res/layout/item_comment.xml" value="0.21145833333333333" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/main/res/font/font.xml" value="0.14722222222222223" />
         <entry key="..\:/kej/mypet/petwalk/app/src/main/res/drawable/circle_icon.xml" value="0.148" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/font-v26/font.xml" value="0.21770833333333334" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/font/font.xml" value="0.21770833333333334" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/font/main_font.xml" value="0.21770833333333334" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/activity_calendar_detail.xml" value="0.264" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/activity_comment.xml" value="0.152" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/activity_community_modify.xml" value="0.4" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/activity_community_write.xml" value="0.264" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/activity_main.xml" value="0.13451086956521738" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/activity_pet_list_page.xml" value="0.152" />
         <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/activity_test.xml" value="0.36614583333333334" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/activity_user_login.xml" value="0.264" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/activity_user_pet_page.xml" value="0.264" />
         <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/activity_walk_detail.xml" value="0.22447916666666667" />
         <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/activity_walk_result.xml" value="0.11392405063291139" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/activity_walk_travel_detail.xml" value="0.264" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/card_background.xml" value="0.536" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/card_comment.xml" value="0.6" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/card_post.xml" value="0.264" />
         <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/fragment_blank.xml" value="0.36614583333333334" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/fragment_frag_calendar.xml" value="0.264" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/fragment_frag_community.xml" value="0.176" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/fragment_frag_home.xml" value="0.4" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/fragment_frag_mypage.xml" value="0.264" />
         <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/fragment_frag_walk.xml" value="0.264" />
         <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/fragment_maps.xml" value="0.36614583333333334" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/item_calendar.xml" value="0.536" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/item_image.xml" value="0.13229166666666667" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/layout/pet_list.xml" value="0.264" />
+        <entry key="..\:/kej/mypet/petwalk/app/src/main/res/menu/bottom_nav.xml" value="0.19114583333333332" />
         <entry key="..\:/kej/petwalk/petwalk/app/src/main/res/drawable/circle_cal_check.xml" value="0.1425" />
         <entry key="..\:/kej/petwalk/petwalk/app/src/main/res/drawable/ic_baseline_chevron_left_24.xml" value="0.248" />
         <entry key="..\:/kej/petwalk/petwalk/app/src/main/res/drawable/ic_baseline_chevron_right_24.xml" value="0.248" />

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".walk.WalkResultActivity">
+
+        <TextView
+            android:id="@+id/result"
+            android:padding="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="TextView"
+            android:paddingBottom="50dp"/>
+        <EditText
+            android:id="@+id/ed_memo"
+            android:padding="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:textSize="16sp"
+            android:background="@android:color/transparent"
+            android:hint="오늘 산책은 어땠는지 메모를 남겨주세요.(최대 300자)"/>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/cancle_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#404040"
+            android:text="취소하기"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/save_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/main_green"
+            android:text="저장하기"
+            android:textColor="@color/white" />
+
+
+    </LinearLayout>
+</LinearLayout>
